@@ -69,7 +69,7 @@ class EnvironmentBuilder implements WarmableInterface
         $loader = new \Twig_Loader_String();
         $twig = new \Twig_Environment($loader, $params);
 
-        if (!$securiyPolicy) {
+        if (!$securityPolicy) {
             $this->initSecurityPolicy();
             $sandboxExtension = new \Twig_Extension_Sandbox($this->policy, true);
         }
