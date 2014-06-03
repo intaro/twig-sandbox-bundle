@@ -1,0 +1,22 @@
+{
+    "name": "intaro/twig-sandbox-bundle",
+    "description": "Annotation configuration of the allowed methods and properties for Twig_Sandbox extension",
+    "keywords": ["symfony2", "twig", "sandbox", "php"],
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [{
+        "name" : "Ilyas Salikhov"
+    }],
+    "require": {
+        "php": ">=5.3.0",
+        "symfony/framework-bundle" : "~2.1",
+        "symfony/yaml": "~2.1",
+        "twig/twig": ">=1.9.1",
+    },
+    "autoload": {
+        "psr-0": {
+            "Intaro\\TwigSandboxBundle\\": ""
+        }
+    },
+    "target-dir" : "Intaro/TwigSandboxBundle"
+}

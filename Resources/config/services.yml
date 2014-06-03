@@ -1,0 +1,127 @@
+parameters:
+    intaro.twig_sandbox.warmer.class: Intaro\TwigSandboxBundle\CacheWarmer\TwigSandboxCacheWarmer
+    intaro.twig_sandbox.builder.class: Intaro\TwigSandboxBundle\Builder\EnvironmentBuilder
+    intaro.twig_sandbox.policy.class: Intaro\TwigSandboxBundle\SecurityPolicy\SecurityPolicy
+    intaro.twig_sandbox.dumper.class: Intaro\TwigSandboxBundle\Dumper\PhpDumper
+    intaro.twig_sandbox.cache.file_name: IntaroTwigSandboxPolicy
+
+    intaro.twig_sandbox.loader.annot_dir.class: Intaro\TwigSandboxBundle\Loader\AnnotationDirectoryLoader
+    intaro.twig_sandbox.loader.annot_file.class: Intaro\TwigSandboxBundle\Loader\AnnotationFileLoader
+    intaro.twig_sandbox.loader.annot_class.class: Intaro\TwigSandboxBundle\Loader\AnnotationClassLoader
+
+    intaro.twig_sandbox.loader_resolver.class: Symfony\Component\Config\Loader\LoaderResolver
+    intaro.twig_sandbox.loader.class: Symfony\Component\Config\Loader\DelegatingLoader
+
+    intaro.twig_sandbox.policy_tags:
+        - 'autoescape'
+        - 'filter'
+        - 'do'
+        - 'flush'
+        - 'for'
+        - 'set'
+        - 'verbatium'
+        - 'if'
+        - 'spaceless'
+
+    intaro.twig_sandbox.policy_filters:
+        - 'abs'
+        - 'batch'
+        - 'capitalize'
+        - 'convert_encoding'
+        - 'date'
+        - 'date_modify'
+        - 'default'
+        - 'escape'
+        - 'first'
+        - 'format'
+        - 'join'
+        - 'json_encode'
+        - 'keys'
+        - 'last'
+        - 'length'
+        - 'lower'
+        - 'merge'
+        - 'nl2br'
+        - 'number_format'
+        - 'raw'
+        - 'replace'
+        - 'reverse'
+        - 'slice'
+        - 'sort'
+        - 'split'
+        - 'striptags'
+        - 'title'
+        - 'trim'
+        - 'upper'
+        - 'url_encode'
+
+    intaro.twig_sandbox.policy_functions:
+        - 'attribute'
+        - 'constant'
+        - 'cycle'
+        - 'date'
+        - 'random'
+        - 'range'
+
+services:
+    intaro.twig_sandbox.loader.annot_class:
+        class: %intaro.twig_sandbox.loader.annot_class.class%
+        public: false
+        arguments:
+            - @annotation_reader
+
+    intaro.twig_sandbox.loader.annot_dir:
+        class: %intaro.twig_sandbox.loader.annot_dir.class%
+        public: false
+        arguments:
+            - @file_locator
+            - @intaro.twig_sandbox.loader.annot_class
+
+    intaro.twig_sandbox.loader.annot_file:
+        class: %intaro.twig_sandbox.loader.annot_file.class%
+        public: false
+        arguments:
+            - @file_locator
+            - @intaro.twig_sandbox.loader.annot_class
+
+    intaro.twig_sandbox.loader_resolver:
+        class: %intaro.twig_sandbox.loader_resolver.class%
+        public: false
+        arguments:
+            - [@intaro.twig_sandbox.loader.annot_dir, @intaro.twig_sandbox.loader.annot_file, @intaro.twig_sandbox.loader.annot_class]
+
+    intaro.twig_sandbox.loader:
+        class: %intaro.twig_sandbox.loader.class%
+        public: false
+        arguments:
+            - @intaro.twig_sandbox.loader_resolver
+
+    intaro.twig_sandbox.policy:
+        class: %intaro.twig_sandbox.policy.class%
+        public: false
+        arguments:
+            - %intaro.twig_sandbox.policy_tags%
+            - %intaro.twig_sandbox.policy_filters%
+            - []
+            - []
+            - %intaro.twig_sandbox.policy_functions%
+
+    intaro.twig_sandbox.builder:
+        class: %intaro.twig_sandbox.builder.class%
+        arguments:
+            - @intaro.twig_sandbox.loader
+            - @intaro.twig_sandbox.policy
+            -
+                cache_dir: %kernel.cache_dir%
+                cache_filename: %intaro.twig_sandbox.cache.file_name%
+                dumper_class: %intaro.twig_sandbox.dumper.class%
+                bundles: %kernel.bundles%
+                debug: %kernel.debug%
+
+    intaro.twig_sandbox.warmer:
+        class: %intaro.twig_sandbox.warmer.class%
+        public: false
+        arguments:
+            - @intaro.twig_sandbox.builder
+        tags:
+            - { name: kernel.cache_warmer }
