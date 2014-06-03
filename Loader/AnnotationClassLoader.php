@@ -55,7 +55,11 @@ class AnnotationClassLoader implements LoaderInterface
         foreach ($class->getMethods() as $method) {
             foreach ($this->reader->getMethodAnnotations($method) as $annot) {
                 if ($annot instanceof $this->annotationClass) {
-                    $rules->addMethod($class->getName(), $method->getName());
+                    $methodName = $method->getName();
+                    if (strncmp($methodName, 'get', 3) === 0 && strlen($methodName) > 3) {
+                        $methodName = lcfirst(substr($methodName, 3));
+                    }
+                    $rules->addMethod($class->getName(), $methodName);
                 }
             }
         }
