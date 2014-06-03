@@ -16,6 +16,7 @@ class EnvironmentBuilder implements WarmableInterface
     private $loader;
     private $options;
     private $policy;
+    private $rules;
     private $extensions = array();
 
     public function __construct(LoaderInterface $loader, SecurityPolicy $policy = null, array $options = array())
@@ -23,8 +24,6 @@ class EnvironmentBuilder implements WarmableInterface
         $this->loader = $loader;
         $this->policy = $policy;
         $this->setOptions($options);
-
-        $this->initSecurityPolicy();
     }
 
     /**
@@ -70,7 +69,13 @@ class EnvironmentBuilder implements WarmableInterface
         $loader = new \Twig_Loader_String();
         $twig = new \Twig_Environment($loader, $params);
 
-        $sandboxExtension = new \Twig_Extension_Sandbox($securityPolicy ?: $this->policy, true);
+        if (!$securiyPolicy) {
+            $this->initSecurityPolicy();
+            $sandboxExtension = new \Twig_Extension_Sandbox($this->policy, true);
+        }
+        else {
+            $sandboxExtension = new \Twig_Extension_Sandbox($securityPolicy, true);
+        }
         $twig->addExtension($sandboxExtension);
 
         foreach ($this->extensions as $extension) {
@@ -117,8 +122,12 @@ class EnvironmentBuilder implements WarmableInterface
         $this->policy->setAllowedMethods($rules->getMethods());
     }
 
-    private function getPolicyRules()
+    public function getPolicyRules()
     {
+        if ($this->rules) {
+            return $this->rules;
+        }
+
         if (null === $this->options['cache_dir'] || null === $this->options['cache_filename']) {
             throw new \RuntimeException('Options "cache_dir" and "cache_filename" must be defined.');
         }
@@ -144,7 +153,9 @@ class EnvironmentBuilder implements WarmableInterface
             $cache->write($dumper->dump($rules), $rules->getResources());
         }
 
-        return include $cache;
+        $this->rules = include $cache;
+
+        return $this->rules;
     }
 
     /**
