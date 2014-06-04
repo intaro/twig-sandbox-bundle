@@ -47,7 +47,7 @@ Define allowed properties and methods for your entities throw annotation `@Sandb
 <?php
 // Acme/DemoBundle/Entity/Product.php
 
-namespace Intaro\CRMBundle\Entity;
+namespace Acme\DemoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Intaro\TwigSandboxBundle\Annotation\Sandbox;
@@ -276,3 +276,58 @@ parameters:
         - 'date'
         - 'range'
 ```
+
+### Environment
+
+You can set twig environment parameters:
+```php
+
+$twig = $this->get('intaro.twig_sandbox.builder')->getSandboxEnvironment(array(
+    'strict_variables' => true
+));
+```
+
+Also you might want to add extensions to your twig environment. Example how to add:
+```php
+// Acme/DemoBundle/AcmeDemoBundle.php
+<?php
+
+namespace Acme\DemoBundle;
+
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Acme\DemoBundle\DependencyInjection\Compiler\TwigSandboxPass;
+
+class AcmeDemoBundle extends Bundle
+{
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+
+        $container->addCompilerPass(new TwigSandboxPass());
+    }
+}
+```
+
+```php
+// Acme/DemoBundle/DependencyInjection/Compiler/TwigSandboxPass.php
+<?php
+
+namespace Acme\DemoBundle\DependencyInjection\Compiler;
+
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
+
+class TwigSandboxPass implements CompilerPassInterface
+{
+    public function process(ContainerBuilder $container)
+    {
+        if (!$container->hasDefinition('intaro.twig_sandbox.builder')) {
+            return;
+        }
+
+        $sandbox = $container->getDefinition('intaro.twig_sandbox.builder');
+        $sandbox->addMethodCall('addExtension', array(new Reference('acme_demo.twig_extension')));
+    }
+}
