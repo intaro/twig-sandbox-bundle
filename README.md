@@ -27,7 +27,7 @@ public function registerBundles()
         //...
 
         new Intaro\TwigSandboxBundle\IntaroTwigSandboxBundle(),
-);
+    );
 
     //...
 }
