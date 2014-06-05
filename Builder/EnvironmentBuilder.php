@@ -89,7 +89,7 @@ class EnvironmentBuilder implements WarmableInterface
     {
         $this->options = array(
             'cache_dir'      => null,
-            'cache_filename' => 'IntaroCRMTwigSandboxPolicy',
+            'cache_filename' => 'IntaroTwigSandboxPolicy',
             'dumper_class'   => null,
             'bundles'        => array(),
             'debug'          => false,
