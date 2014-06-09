@@ -125,3 +125,10 @@ services:
             - @intaro.twig_sandbox.builder
         tags:
             - { name: kernel.cache_warmer }
+
+    intaro.twig_sandbox.validator:
+        class: Intaro\TwigSandboxBundle\Validator\Constraints\TwigSandboxValidator
+        arguments:
+            - @intaro.twig_sandbox.builder
+        tags:
+            - { name: validator.constraint_validator, alias: twig_sandbox }
