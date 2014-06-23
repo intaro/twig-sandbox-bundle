@@ -175,6 +175,29 @@ $html2 = $twig->render(
 
 ```
 
+### Validation
+
+You can validate entity fields which contain twig templates with TwigSandbox validator.
+
+```php
+//in Entity/Page.php
+
+use Intaro\TwigSandboxBundle\Validator\Constraints\TwigSandbox;
+
+class Page
+{
+    //...
+    
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('template', new TwigSandbox());
+    }
+    
+    //...
+}
+
+```
+
 ## Configure
 
 ### Methods and properties
