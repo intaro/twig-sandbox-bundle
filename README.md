@@ -11,7 +11,7 @@ Require the bundle in your `composer.json` file:
 ````json
 {
     "require": {
-        "intaro/twig-sandbox-bundle": "dev-master",
+        "intaro/twig-sandbox-bundle": "~0.1.0",
     }
 }
 ```
