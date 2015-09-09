@@ -92,6 +92,10 @@ class AnnotationFileLoader extends FileLoader
             }
 
             if (T_CLASS === $token[0]) {
+                // Entity::class bug
+                if ($i > 0 && T_PAAMAYIM_NEKUDOTAYIM === $tokens[$i - 1][0]) {
+                    continue;
+                }
                 $class = true;
             }
 
