@@ -15,13 +15,18 @@ class TwigSandboxValidator extends ConstraintValidator
         $this->builder = $builder;
     }
 
+    public function getTwig()
+    {
+        return $this->builder->getSandboxEnvironment();
+    }
+
      public function validate($value, Constraint $constraint)
      {
          if (!$value) {
              return;
          }
 
-         $twig = $this->builder->getSandboxEnvironment();
+         $twig = $this->getTwig();
 
          try {
              $twig->render($value);
