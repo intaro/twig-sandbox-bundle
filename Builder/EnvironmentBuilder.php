@@ -153,7 +153,7 @@ class EnvironmentBuilder implements WarmableInterface
             $cache->write($dumper->dump($rules), $rules->getResources());
         }
 
-        $this->rules = include $cache;
+        $this->rules = include $cache->getPath();
 
         return $this->rules;
     }
