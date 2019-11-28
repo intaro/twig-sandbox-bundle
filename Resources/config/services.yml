@@ -88,10 +88,7 @@ services:
         class: "%intaro.twig_sandbox.loader_resolver.class%"
         public: false
         arguments:
-            -:
-                - "@intaro.twig_sandbox.loader.annot_dir"
-                - "@intaro.twig_sandbox.loader.annot_file"
-                - "@intaro.twig_sandbox.loader.annot_class"
+            - ["@intaro.twig_sandbox.loader.annot_dir", "@intaro.twig_sandbox.loader.annot_file", "@intaro.twig_sandbox.loader.annot_class"]
 
     intaro.twig_sandbox.loader:
         class: "%intaro.twig_sandbox.loader.class%"
