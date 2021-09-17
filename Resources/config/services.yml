@@ -63,6 +63,15 @@ parameters:
         - 'random'
         - 'range'
 
+    intaro.twig_sandbox.sandbox_annotation.value_types:
+        - 'bool'
+        - 'collection'
+        - 'date'
+        - 'float'
+        - 'int'
+        - 'object'
+        - 'string'
+
 services:
     intaro.twig_sandbox.loader.annot_class:
         class: "%intaro.twig_sandbox.loader.annot_class.class%"
