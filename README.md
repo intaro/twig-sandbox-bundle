@@ -41,7 +41,12 @@ $ composer update intaro/twig-sandbox-bundle
 
 ## Usage
 
-Define allowed properties and methods for your entities throw annotation `@Sandbox`.
+Define allowed properties and methods for your entities using annotation `@Sandbox`.
+Optionally you can add `type` option for annotation.
+This option defines type of value that property stores or method returns.
+
+In your application you can use annotation reader to extract value of `type` option and use this value
+to perform additional checks or any other actions, for example, use twig filters according to value of the option.
 
 ```php
 <?php
@@ -70,7 +75,7 @@ class Product
     /**
      * @var string $name
      *
-     * @Sandbox
+     * @Sandbox(type="string")
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
@@ -86,7 +91,7 @@ class Product
     /**
      * Get id
      *
-     * @Sandbox
+     * @Sandbox(type="int")
      * @return integer 
      */
     public function getId()
@@ -202,7 +207,7 @@ class Page
 
 ### Methods and properties
 
-You can defined allowed entities methods and properties throw annotation `Intaro\TwigSandboxBundle\Annotation\Sandbox`. Example above.
+You can define allowed methods and properties of entities with annotation `Intaro\TwigSandboxBundle\Annotation\Sandbox`. Example above.
 
 ### Tags 
 
@@ -298,6 +303,31 @@ parameters:
     intaro.twig_sandbox.policy_functions:
         - 'date'
         - 'range'
+```
+
+### Allowed types
+
+Default list of allowed return types:
+```yml
+- 'bool'
+- 'collection'
+- 'date'
+- 'float'
+- 'int'
+- 'object'
+- 'string'
+```
+
+You can override list in parameter `intaro.twig_sandbox.sandbox_annotation.value_types`:
+```yml
+# app/config/config.yml
+
+parameters:
+    intaro.twig_sandbox.sandbox_annotation.value_types:
+        - 'string'
+        - 'date'
+        - 'collection'
+        - 'stdClass'
 ```
 
 ### Environment
