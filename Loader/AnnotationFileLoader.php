@@ -14,17 +14,17 @@ class AnnotationFileLoader extends FileLoader
     /**
      * Constructor.
      *
-     * @param FileLocator           $locator A FileLocator instance
-     * @param AnnotationClassLoader $loader  An AnnotationClassLoader instance
-     * @param string|array          $paths   A path or an array of paths where to look for resources
+     * @param FileLocator $locator A FileLocator instance
+     * @param AnnotationClassLoader $loader An AnnotationClassLoader instance
+     * @param string|null $env
      */
-    public function __construct(FileLocator $locator, AnnotationClassLoader $loader, $paths = array())
+    public function __construct(FileLocator $locator, AnnotationClassLoader $loader, string $env = null)
     {
         if (!function_exists('token_get_all')) {
             throw new \RuntimeException('The Tokenizer extension is required for the routing annotation loaders.');
         }
 
-        parent::__construct($locator, $paths);
+        parent::__construct($locator, $env);
 
         $this->loader = $loader;
     }
@@ -80,7 +80,7 @@ class AnnotationFileLoader extends FileLoader
             }
 
             if (true === $class && T_STRING === $token[0]) {
-                return $namespace.'\\'.$token[1];
+                return $namespace . '\\' . $token[1];
             }
 
             if (true === $namespace && T_STRING === $token[0]) {
