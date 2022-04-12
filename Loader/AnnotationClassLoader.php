@@ -88,9 +88,10 @@ class AnnotationClassLoader implements LoaderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return LoaderResolverInterface|null
      */
     public function getResolver()
     {
+        return null;
     }
 }

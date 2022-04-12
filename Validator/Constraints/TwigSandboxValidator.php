@@ -20,6 +20,9 @@ class TwigSandboxValidator extends ConstraintValidator
         return $this->builder->getSandboxEnvironment();
     }
 
+    /**
+     * @param \Intaro\TwigSandboxBundle\Validator\Constraints\TwigSandbox $constraint
+     */
      public function validate($value, Constraint $constraint)
      {
          if (!$value) {
@@ -29,16 +32,16 @@ class TwigSandboxValidator extends ConstraintValidator
          $twig = $this->getTwig();
 
          try {
-             $twig->render($value);
+             $twig->createTemplate($value);
          }
-         catch (\Twig_Sandbox_SecurityError $e) {
+         catch (\Twig\Sandbox\SecurityError $e) {
              $message = mb_strlen($e->getMessage()) > 150 ? mb_substr($e->getMessage(), 0, 150) . '…' : $e->getMessage();
 
              $this->context->addViolation($constraint->message, array(
                 '{{ syntax_error }}' => $message,
              ));
          }
-         catch (\Twig_Error_Syntax $e) {
+         catch (\Twig\Error\SyntaxError $e) {
              $message = mb_strlen($e->getMessage()) > 150 ? mb_substr($e->getMessage(), 0, 150) . '…' : $e->getMessage();
 
              $this->context->addViolation($constraint->message, array(

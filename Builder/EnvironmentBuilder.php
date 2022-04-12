@@ -5,8 +5,12 @@ namespace Intaro\TwigSandboxBundle\Builder;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
-use Intaro\TwigSandboxBundle\SecurityPolicy\SecurityPolicy;
 use Intaro\TwigSandboxBundle\SecurityPolicy\SecurityPolicyRules;
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\Extension\SandboxExtension;
+use Twig\Loader\ArrayLoader;
+use Twig\Sandbox\SecurityPolicy;
 
 /**
  * Builder of twig sandbox environment with specified rights
@@ -30,22 +34,20 @@ class EnvironmentBuilder implements WarmableInterface
      * Additional extension for sandbox environment
      *
      * @access public
-     * @param \Twig_Extension $extension
+     * @param AbstractExtension $extension
      * @return void
      */
-    public function addExtension(\Twig_Extension $extension)
+    public function addExtension(AbstractExtension $extension)
     {
         $this->extensions[] = $extension;
     }
 
     /**
-     * Additional extensions for sandbox environment
-     *
-     * @access public
-     * @param \Twig_Extension $extension
+     * @param AbstractExtension[]|array|null $extensions
      * @return void
+     *
      */
-    public function addExtensions($extensions = null)
+    public function addExtensions(array $extensions = null): void
     {
         if (!is_array($extensions)) {
             return;
@@ -58,23 +60,18 @@ class EnvironmentBuilder implements WarmableInterface
 
     /**
      * Формирует окружение для Twig Sandbox
-     *
-     * @access public
-     * @param SecurityPolicy $policy
-     * @param mixed $params (default: [])
-     * @return \Twig_Environment
      */
-    public function getSandboxEnvironment($params = array(), SecurityPolicy $securityPolicy = null)
+    public function getSandboxEnvironment($params = array(), SecurityPolicy $securityPolicy = null): Environment
     {
-        $loader = new \Twig_Loader_String();
-        $twig = new \Twig_Environment($loader, $params);
+        $loader = new ArrayLoader();
+        $twig = new Environment($loader, $params);
 
         if (!$securityPolicy) {
             $this->initSecurityPolicy();
-            $sandboxExtension = new \Twig_Extension_Sandbox($this->policy, true);
+            $sandboxExtension = new SandboxExtension($this->policy, true);
         }
         else {
-            $sandboxExtension = new \Twig_Extension_Sandbox($securityPolicy, true);
+            $sandboxExtension = new SandboxExtension($securityPolicy, true);
         }
         $twig->addExtension($sandboxExtension);
 

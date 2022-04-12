@@ -1,7 +1,6 @@
 parameters:
     intaro.twig_sandbox.warmer.class: Intaro\TwigSandboxBundle\CacheWarmer\TwigSandboxCacheWarmer
     intaro.twig_sandbox.builder.class: Intaro\TwigSandboxBundle\Builder\EnvironmentBuilder
-    intaro.twig_sandbox.policy.class: Intaro\TwigSandboxBundle\SecurityPolicy\SecurityPolicy
     intaro.twig_sandbox.dumper.class: Intaro\TwigSandboxBundle\Dumper\PhpDumper
     intaro.twig_sandbox.cache.file_name: IntaroTwigSandboxPolicy
 
@@ -73,31 +72,34 @@ parameters:
         - 'string'
 
 services:
+    Intaro\TwigSandboxBundle\Loader\AnnotationClassLoader: '@intaro.twig_sandbox.loader.annot_class'
     intaro.twig_sandbox.loader.annot_class:
         class: "%intaro.twig_sandbox.loader.annot_class.class%"
         public: false
         arguments:
             - "@annotation_reader"
 
+    Intaro\TwigSandboxBundle\Loader\AnnotationDirectoryLoader: '@intaro.twig_sandbox.loader.annot_dir'
     intaro.twig_sandbox.loader.annot_dir:
         class: "%intaro.twig_sandbox.loader.annot_dir.class%"
         public: false
         arguments:
             - "@file_locator"
-            - "@intaro.twig_sandbox.loader.annot_class"
+            - '@Intaro\TwigSandboxBundle\Loader\AnnotationClassLoader'
 
+    Intaro\TwigSandboxBundle\Loader\AnnotationFileLoader: '@intaro.twig_sandbox.loader.annot_file'
     intaro.twig_sandbox.loader.annot_file:
         class: "%intaro.twig_sandbox.loader.annot_file.class%"
         public: false
         arguments:
             - "@file_locator"
-            - "@intaro.twig_sandbox.loader.annot_class"
+            - '@Intaro\TwigSandboxBundle\Loader\AnnotationClassLoader'
 
     intaro.twig_sandbox.loader_resolver:
         class: "%intaro.twig_sandbox.loader_resolver.class%"
         public: false
         arguments:
-            - ["@intaro.twig_sandbox.loader.annot_dir", "@intaro.twig_sandbox.loader.annot_file", "@intaro.twig_sandbox.loader.annot_class"]
+            - ['@Intaro\TwigSandboxBundle\Loader\AnnotationDirectoryLoader', '@Intaro\TwigSandboxBundle\Loader\AnnotationFileLoader', '@Intaro\TwigSandboxBundle\Loader\AnnotationClassLoader']
 
     intaro.twig_sandbox.loader:
         class: "%intaro.twig_sandbox.loader.class%"
@@ -106,7 +108,7 @@ services:
             - "@intaro.twig_sandbox.loader_resolver"
 
     intaro.twig_sandbox.policy:
-        class: "%intaro.twig_sandbox.policy.class%"
+        class: Twig\Sandbox\SecurityPolicy
         public: false
         arguments:
             - "%intaro.twig_sandbox.policy_tags%"
@@ -115,11 +117,12 @@ services:
             - []
             - "%intaro.twig_sandbox.policy_functions%"
 
+    Intaro\TwigSandboxBundle\Builder\EnvironmentBuilder: '@intaro.twig_sandbox.builder'
     intaro.twig_sandbox.builder:
         class: "%intaro.twig_sandbox.builder.class%"
         arguments:
             - "@intaro.twig_sandbox.loader"
-            - "@intaro.twig_sandbox.policy"
+            - '@intaro.twig_sandbox.policy'
             -
                 cache_dir: "%kernel.cache_dir%"
                 cache_filename: "%intaro.twig_sandbox.cache.file_name%"
@@ -127,14 +130,16 @@ services:
                 bundles: "%kernel.bundles%"
                 debug: "%kernel.debug%"
 
+    Intaro\TwigSandboxBundle\CacheWarmer\TwigSandboxCacheWarmer: '@intaro.twig_sandbox.warmer'
     intaro.twig_sandbox.warmer:
         class: "%intaro.twig_sandbox.warmer.class%"
         public: false
         arguments:
-            - "@intaro.twig_sandbox.builder"
+            - '@Intaro\TwigSandboxBundle\Builder\EnvironmentBuilder'
         tags:
             - { name: kernel.cache_warmer }
 
+    Intaro\TwigSandboxBundle\Validator\Constraints\TwigSandboxValidator: '@intaro.twig_sandbox.validator'
     intaro.twig_sandbox.validator:
         class: Intaro\TwigSandboxBundle\Validator\Constraints\TwigSandboxValidator
         arguments:
