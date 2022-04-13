@@ -61,7 +61,7 @@ class EnvironmentBuilder implements WarmableInterface
     /**
      * Формирует окружение для Twig Sandbox
      */
-    public function getSandboxEnvironment($params = array(), SecurityPolicy $securityPolicy = null): Environment
+    public function getSandboxEnvironment($params = array(), SecurityPolicy $securityPolicy = null): TwigAdapter
     {
         $loader = new ArrayLoader();
         $twig = new Environment($loader, $params);
@@ -79,7 +79,7 @@ class EnvironmentBuilder implements WarmableInterface
             $twig->addExtension($extension);
         }
 
-        return $twig;
+        return new TwigAdapter($twig);
     }
 
     public function setOptions(array $options)

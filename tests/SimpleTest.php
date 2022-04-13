@@ -15,6 +15,30 @@ class SimpleTest extends TestCase
 
     public function testRender()
     {
+        $twigAdapter = $this->createTwigEnv();
+
+        $product = new Product();
+        $product->setName('Product 1');
+        $product->setQuantity(5);
+
+        $twig = $twigAdapter->getTwig();
+        $tpl = $twig->createTemplate('Product {{ product.name }}');
+        $html1 = $tpl->render([
+            'product' => $product,
+        ]);
+
+        $this->assertEquals('Product Product 1', $html1);
+
+
+        $html1 = $twigAdapter->render('Product {{ product.name }}', [
+            'product' => $product,
+        ]);
+
+        $this->assertEquals('Product Product 1', $html1);
+    }
+
+    private function createTwigEnv()
+    {
         $annotationClassLoader = new AnnotationClassLoader(new \Doctrine\Common\Annotations\AnnotationReader());
         $annotationDirectoryLoader = new AnnotationDirectoryLoader(new FileLocator(), $annotationClassLoader);
         $annotationFileLoader = new AnnotationFileLoader(new FileLocator(), $annotationClassLoader);
@@ -41,17 +65,6 @@ class SimpleTest extends TestCase
             ]
         );
 
-        $twig = $builder->getSandboxEnvironment();
-
-        $product = new Product();
-        $product->setName('Product 1');
-        $product->setQuantity(5);
-
-        $tpl = $twig->createTemplate('Product {{ product.name }}');
-        $html1 = $tpl->render([
-            'product' => $product,
-        ]);
-
-        $this->assertEquals('Product Product 1', $html1);
+        return $builder->getSandboxEnvironment();
     }
 }
