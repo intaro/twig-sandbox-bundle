@@ -1,17 +1,19 @@
 # TwigSandboxBundle
 
-There is [Twig](http://twig.sensiolabs.org)-extension [Twig_Extension_Sandbox](http://twig.sensiolabs.org/doc/api.html#sandbox-extension) which can be used to evaluate untrusted code and where access to unsafe attributes and methods is prohibited. This bundle allows to configure security policy for sandbox.
+![CI](https://github.com/intaro/twig-sandbox-bundle/workflows/CI/badge.svg?branch=master)
+
+There is [Twig](https://twig.symfony.com)-extension [Sandbox](https://twig.symfony.com/doc/2.x/api.html#sandbox-extension) which can be used to evaluate untrusted code and where access to unsafe attributes and methods is prohibited. This bundle allows to configure security policy for sandbox.
 
 ## Installation
 
-TwigSandboxBundle requires Symfony 2.1 or higher.
+TwigSandboxBundle requires Symfony 4.4 or higher.
 
 Require the bundle in your `composer.json` file:
 
 ```json
 {
     "require": {
-        "intaro/twig-sandbox-bundle": "~0.1.0",
+        "intaro/twig-sandbox-bundle": "^1.0",
     }
 }
 ```
@@ -23,11 +25,11 @@ Register the bundle in `AppKernel`:
 
 public function registerBundles()
 {
-    $bundles = array(
+    $bundles = [
         //...
 
         new Intaro\TwigSandboxBundle\IntaroTwigSandboxBundle(),
-    );
+    ];
 
     //...
 }
@@ -36,7 +38,7 @@ public function registerBundles()
 Install the bundle:
 
 ```
-$ composer update intaro/twig-sandbox-bundle
+$ composer require intaro/twig-sandbox-bundle
 ```
 
 ## Usage
@@ -165,17 +167,17 @@ $product->setQuantity(5);
 //success render
 $html1 = $twig->render(
     'Product {{ product.name }}',
-    array(
+    [
         'product' => $product,
-    )
+    ]
 );
 
 //render with exception
 $html2 = $twig->render(
     'Product {{ product.name }} in the quantity {{ product.quantity }}',
-    array(
+    [
         'product' => $product,
-    )
+    ]
 );
 
 ```
@@ -335,9 +337,9 @@ parameters:
 You can set twig environment parameters:
 ```php
 
-$twig = $this->get('intaro.twig_sandbox.builder')->getSandboxEnvironment(array(
+$twig = $this->get('intaro.twig_sandbox.builder')->getSandboxEnvironment([
     'strict_variables' => true
-));
+]);
 ```
 
 Also you might want to add extensions to your twig environment. Example how to add:
