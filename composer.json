@@ -1,18 +1,26 @@
 {
     "name": "intaro/twig-sandbox-bundle",
     "description": "Annotation configuration of the allowed methods and properties for Twig_Sandbox extension",
-    "keywords": ["symfony2", "twig", "sandbox", "php"],
+    "keywords": [
+        "symfony2",
+        "twig",
+        "sandbox",
+        "php"
+    ],
     "type": "symfony-bundle",
     "license": "MIT",
-    "authors": [{
-        "name" : "Ilyas Salikhov"
-    }],
+    "authors": [
+        {
+            "name": "Ilyas Salikhov"
+        }
+    ],
     "require": {
+        "doctrine/annotations": "^1.13",
         "php": "^7.2",
-        "symfony/framework-bundle" : "^4.4",
-        "symfony/validator": "^4.4",
-        "twig/twig": "^2.14",
-        "doctrine/annotations": "^1.13"
+        "psr/cache": "~1.0",
+        "symfony/framework-bundle": "^4.4|^5.0",
+        "symfony/validator": "^4.4|^5.0",
+        "twig/twig": "^2.14"
     },
     "autoload": {
         "psr-4": {
@@ -20,17 +28,35 @@
         }
     },
     "require-dev": {
+        "nyholm/symfony-bundle-test": "^2.0",
+        "phpstan/phpstan": "^1.0",
         "phpstan/phpstan-symfony": "^1.0",
         "phpunit/phpunit": "^8.5",
-        "symfony/phpunit-bridge": "^5.0"
+        "symfony/phpunit-bridge": "^5.0",
+        "symfony/config": "^4.4|^5.0",
+        "symfony/dependency-injection": "^4.4|^5.0",
+        "symfony/event-dispatcher": "^4.4|^5.0",
+        "symfony/error-handler": "^4.4|^5.0",
+        "symfony/http-kernel": "^4.4|^5.0",
+        "symfony/http-foundation": "^4.4|^5.0",
+        "symfony/yaml": "^4.4|^5.0",
+        "symfony/deprecation-contracts": "^1.1|^2.0",
+        "symfony/event-dispatcher-contracts": "^1.1|^2.0",
+        "symfony/routing": "^4.4|^5.0",
+        "symfony/finder": "^4.4|^5.0",
+        "symfony/filesystem": "^4.4|^5.0",
+        "symfony/translation-contracts": "^1.1|^2.0",
+        "symfony/var-exporter": "^4.4|^5.0",
+        "symfony/var-dumper": "^4.4|^5.0",
+        "psr/log": "~1.0"
     },
     "autoload-dev": {
-        "psr-4" : {
-            "Intaro\\TwigSandboxBundle\\Tests\\" : "tests/"
+        "psr-4": {
+            "Intaro\\TwigSandboxBundle\\Tests\\": "tests/"
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit --color=always --coverage-clover=build/logs/clover.xml",
+        "test": "vendor/bin/phpunit --color=always",
         "static-analysis": [
             "phpstan analyse --ansi --memory-limit=1G"
         ],

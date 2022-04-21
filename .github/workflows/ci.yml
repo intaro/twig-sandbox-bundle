@@ -17,9 +17,7 @@ jobs:
           - '7.4'
         symfony-version:
           - '4.4.*'
-        dependencies:
-          - 'lowest'
-          - 'highest'
+          - '5.4.*'
         coverage: [ 'none' ]
     steps:
       - name: "Checkout"
@@ -34,8 +32,6 @@ jobs:
 
       - name: "Install dependencies"
         uses: ramsey/composer-install@v2
-        with:
-          dependency-versions: ${{ matrix.dependencies }}
         env:
           SYMFONY_REQUIRE: "${{ matrix.symfony-version }}"
 
