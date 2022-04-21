@@ -2,7 +2,9 @@
 
 namespace Intaro\TwigSandboxBundle\Tests\fixtures;
 
-class FixtureBundle
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+
+class FixtureBundle extends Bundle
 {
 
 }

@@ -17,11 +17,11 @@ use Twig\Sandbox\SecurityPolicy;
  */
 class EnvironmentBuilder implements WarmableInterface
 {
-    private $loader;
+    private LoaderInterface $loader;
     private $options;
-    private $policy;
+    private ?SecurityPolicy $policy;
     private $rules;
-    private $extensions = array();
+    private array $extensions = array();
 
     public function __construct(LoaderInterface $loader, SecurityPolicy $policy = null, array $options = array())
     {
@@ -69,8 +69,7 @@ class EnvironmentBuilder implements WarmableInterface
         if (!$securityPolicy) {
             $this->initSecurityPolicy();
             $sandboxExtension = new SandboxExtension($this->policy, true);
-        }
-        else {
+        } else {
             $sandboxExtension = new SandboxExtension($securityPolicy, true);
         }
         $twig->addExtension($sandboxExtension);
@@ -158,7 +157,7 @@ class EnvironmentBuilder implements WarmableInterface
     /**
      * {@inheritdoc}
      */
-    public function warmUp($cacheDir)
+    public function warmUp($cacheDir): array
     {
         $currentDir = $this->options['cache_dir'];
 
@@ -167,6 +166,8 @@ class EnvironmentBuilder implements WarmableInterface
         $this->getPolicyRules();
 
         $this->options['cache_dir'] = $currentDir;
+
+        return [];
     }
 
 }

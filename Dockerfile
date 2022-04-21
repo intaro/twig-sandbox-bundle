@@ -4,9 +4,8 @@ COPY composer.json /
 
 FROM scratch AS test_source
 
-#COPY benchmarks/ benchmarks/
 COPY . .
-#COPY tests/ /tests/
+COPY tests/ /tests/
 COPY phpunit.xml.* phpstan*.neon .php_cs.*  /
 
 FROM alpine:3.9
@@ -29,6 +28,7 @@ RUN set -eu; \
         php-dom \
         php-pdo \
         php-curl \
+        php-session \
     ; ln -s /usr/bin/php7 /usr/bin/php
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

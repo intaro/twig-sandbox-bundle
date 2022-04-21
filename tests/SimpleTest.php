@@ -23,18 +23,18 @@ class SimpleTest extends TestCase
 
         $twig = $twigAdapter->getTwig();
         $tpl = $twig->createTemplate('Product {{ product.name }}');
-        $html1 = $tpl->render([
+        $html = $tpl->render([
             'product' => $product,
         ]);
 
-        $this->assertEquals('Product Product 1', $html1);
+        $this->assertEquals('Product Product 1', $html);
 
 
-        $html1 = $twigAdapter->render('Product {{ product.name }}', [
+        $html = $twigAdapter->render('Product {{ product.name }}', [
             'product' => $product,
         ]);
 
-        $this->assertEquals('Product Product 1', $html1);
+        $this->assertEquals('Product Product 1', $html);
     }
 
     private function createTwigEnv()

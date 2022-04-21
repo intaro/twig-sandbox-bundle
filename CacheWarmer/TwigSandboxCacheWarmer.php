@@ -20,11 +20,13 @@ class TwigSandboxCacheWarmer implements CacheWarmerInterface
      *
      * @param string $cacheDir The cache directory
      */
-    public function warmUp($cacheDir)
+    public function warmUp($cacheDir): array
     {
         if ($this->environmentBuilder instanceof WarmableInterface) {
-            $this->environmentBuilder->warmUp($cacheDir);
+            return $this->environmentBuilder->warmUp($cacheDir);
         }
+
+        return [];
     }
 
     /**
