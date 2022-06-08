@@ -15,22 +15,14 @@ class SimpleTest extends TestCase
 
     public function testRender()
     {
-        $twigAdapter = $this->createTwigEnv();
+        $twigEnv = $this->createTwigEnv();
 
         $product = new Product();
         $product->setName('Product 1');
         $product->setQuantity(5);
 
-        $twig = $twigAdapter->getTwig();
-        $tpl = $twig->createTemplate('Product {{ product.name }}');
+        $tpl = $twigEnv->createTemplate('Product {{ product.name }}');
         $html = $tpl->render([
-            'product' => $product,
-        ]);
-
-        $this->assertEquals('Product Product 1', $html);
-
-
-        $html = $twigAdapter->render('Product {{ product.name }}', [
             'product' => $product,
         ]);
 

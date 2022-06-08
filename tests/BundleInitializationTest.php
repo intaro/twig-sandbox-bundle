@@ -6,8 +6,8 @@ use Intaro\TwigSandboxBundle\Builder\EnvironmentBuilder;
 use Intaro\TwigSandboxBundle\IntaroTwigSandboxBundle;
 use Intaro\TwigSandboxBundle\Tests\fixtures\Entity\Product;
 use Intaro\TwigSandboxBundle\Tests\fixtures\FixtureBundle;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Nyholm\BundleTest\TestKernel;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedMethodError;
@@ -45,13 +45,12 @@ class BundleInitializationTest extends KernelTestCase
         self::bootKernel();
         $container = self::$container;
 
-        /** @var EnvironmentBuilder $twig */
-        $twig = $container->get('intaro.twig_sandbox.builder');
-        $html = $twig
-            ->getSandboxEnvironment()
-            ->render('Product {{ product.name }}', [
-                'product' => $this->getObject(),
-            ]);
+        $twig = $container->get('intaro.twig_sandbox.builder')->getSandboxEnvironment();
+        $tpl = $twig->createTemplate('Product {{ product.name }}');
+
+        $html = $tpl->render([
+            'product' => $this->getObject(),
+        ]);
 
         $this->assertEquals('Product Product 1', $html);
     }
@@ -61,13 +60,12 @@ class BundleInitializationTest extends KernelTestCase
         self::bootKernel();
         $container = self::$container;
 
-        /** @var EnvironmentBuilder $twig */
-        $twig = $container->get('intaro.twig_sandbox.builder');
-        $html = $twig
-            ->getSandboxEnvironment()
-            ->render('Product {{ product.name|lower }}', [
-                'product' => $this->getObject(),
-            ]);
+        $twig = $container->get('intaro.twig_sandbox.builder')->getSandboxEnvironment();
+        $tpl = $twig->createTemplate('Product {{ product.name|lower }}');
+
+        $html = $tpl->render([
+            'product' => $this->getObject(),
+        ]);
 
         $this->assertEquals('Product product 1', $html);
     }
@@ -80,13 +78,12 @@ class BundleInitializationTest extends KernelTestCase
         self::bootKernel();
         $container = self::$container;
 
-        /** @var EnvironmentBuilder $twig */
-        $twig = $container->get('intaro.twig_sandbox.builder');
-        $twig
-            ->getSandboxEnvironment()
-            ->render('Product {{ product.quantity }}', [
-                'product' => $this->getObject(),
-            ]);
+        $twig = $container->get('intaro.twig_sandbox.builder')->getSandboxEnvironment();
+        $tpl = $twig->createTemplate('Product {{ product.quantity }}');
+
+        $tpl->render([
+            'product' => $this->getObject(),
+        ]);
     }
 
     public function testRenderWithEmptyConfig(): void
@@ -102,13 +99,12 @@ class BundleInitializationTest extends KernelTestCase
         }]);
 
         $container = self::$container;
-        /** @var EnvironmentBuilder $twig */
-        $twig = $container->get('intaro.twig_sandbox.builder');
-        $html = $twig
-            ->getSandboxEnvironment()
-            ->render('Product {{ product.name|lower }}', [
-                'product' => $this->getObject(),
-            ]);
+        $twig = $container->get('intaro.twig_sandbox.builder')->getSandboxEnvironment();
+        $tpl = $twig->createTemplate('Product {{ product.name|lower }}');
+
+        $html = $tpl->render([
+            'product' => $this->getObject(),
+        ]);
 
         $this->assertEquals('Product product 1', $html);
     }
