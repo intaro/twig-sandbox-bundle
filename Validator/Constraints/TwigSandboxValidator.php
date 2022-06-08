@@ -37,16 +37,16 @@ class TwigSandboxValidator extends ConstraintValidator
          catch (\Twig\Sandbox\SecurityError $e) {
              $message = mb_strlen($e->getMessage()) > 150 ? mb_substr($e->getMessage(), 0, 150) . '…' : $e->getMessage();
 
-             $this->context->addViolation($constraint->message, array(
+             $this->context->addViolation($constraint->message, [
                 '{{ syntax_error }}' => $message,
-             ));
+             ]);
          }
          catch (\Twig\Error\SyntaxError $e) {
              $message = mb_strlen($e->getMessage()) > 150 ? mb_substr($e->getMessage(), 0, 150) . '…' : $e->getMessage();
 
-             $this->context->addViolation($constraint->message, array(
+             $this->context->addViolation($constraint->message, [
                 '{{ syntax_error }}' => $message,
-             ));
+             ]);
          }
          catch (\Error $e) {
              goto ex_r;
