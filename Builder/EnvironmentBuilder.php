@@ -21,9 +21,9 @@ class EnvironmentBuilder implements WarmableInterface
     private $options;
     private ?SecurityPolicy $policy;
     private $rules;
-    private array $extensions = array();
+    private array $extensions = [];
 
-    public function __construct(LoaderInterface $loader, SecurityPolicy $policy = null, array $options = array())
+    public function __construct(LoaderInterface $loader, SecurityPolicy $policy = null, array $options = [])
     {
         $this->loader = $loader;
         $this->policy = $policy;
@@ -61,7 +61,7 @@ class EnvironmentBuilder implements WarmableInterface
     /**
      * Формирует окружение для Twig Sandbox
      */
-    public function getSandboxEnvironment($params = array(), SecurityPolicy $securityPolicy = null): TwigAdapter
+    public function getSandboxEnvironment($params = [], SecurityPolicy $securityPolicy = null): TwigAdapter
     {
         $loader = new ArrayLoader();
         $twig = new Environment($loader, $params);
@@ -83,16 +83,16 @@ class EnvironmentBuilder implements WarmableInterface
 
     public function setOptions(array $options)
     {
-        $this->options = array(
+        $this->options = [
             'cache_dir'      => null,
             'cache_filename' => 'IntaroTwigSandboxPolicy',
             'dumper_class'   => null,
-            'bundles'        => array(),
+            'bundles'        => [],
             'debug'          => false,
-        );
+        ];
 
         // check option names and live merge, if errors are encountered Exception will be thrown
-        $invalid = array();
+        $invalid = [];
         foreach ($options as $key => $value) {
             if (array_key_exists($key, $this->options)) {
                 $this->options[$key] = $value;

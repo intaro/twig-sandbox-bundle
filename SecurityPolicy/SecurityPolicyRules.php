@@ -13,7 +13,7 @@ class SecurityPolicyRules
     private $properties;
     private $resources;
 
-    public function __construct(array $methods = array(), array $properties = array(), array $resources = array())
+    public function __construct(array $methods = [], array $properties = [], array $resources = [])
     {
         $this->methods = $methods;
         $this->properties = $properties;
@@ -33,7 +33,7 @@ class SecurityPolicyRules
     public function addMethod($class, $method)
     {
         if (!isset($this->methods[$class])) {
-            $this->methods[$class] = array();
+            $this->methods[$class] = [];
         }
 
         if (!in_array($method, $this->methods[$class])) {
@@ -44,7 +44,7 @@ class SecurityPolicyRules
     public function addProperty($class, $property)
     {
         if (!isset($this->properties[$class])) {
-            $this->properties[$class] = array();
+            $this->properties[$class] = [];
         }
 
         if (!in_array($property, $this->properties[$class])) {

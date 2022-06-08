@@ -13,7 +13,7 @@ Require the bundle in your `composer.json` file:
 ```json
 {
     "require": {
-        "intaro/twig-sandbox-bundle": "^1.0",
+        "intaro/twig-sandbox-bundle": "^1.0"
     }
 }
 ```
@@ -383,6 +383,6 @@ class TwigSandboxPass implements CompilerPassInterface
         }
 
         $sandbox = $container->getDefinition('intaro.twig_sandbox.builder');
-        $sandbox->addMethodCall('addExtension', array(new Reference('acme_demo.twig_extension')));
+        $sandbox->addMethodCall('addExtension', [new Reference('acme_demo.twig_extension')]);
     }
 }
