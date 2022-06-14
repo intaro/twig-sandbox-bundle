@@ -55,11 +55,11 @@ class SimpleTest extends TestCase
 
         $builder = new EnvironmentBuilder(
             $loader,
+            new \Intaro\TwigSandboxBundle\Dumper\PhpDumper(),
             $securityPolicy,
             [
                 'cache_dir' => __DIR__,
                 'cache_filename' => 'IntaroTwigSandboxPolicy',
-                'dumper_class' => "Intaro\TwigSandboxBundle\Dumper\PhpDumper",
                 'bundles' => ['Intaro\TwigSandboxBundle\Tests\fixtures\FixtureBundle'], // %kernel.bundles%
                 'debug' => false, // %kernel.debug%
             ]
