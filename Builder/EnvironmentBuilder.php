@@ -2,6 +2,8 @@
 
 namespace Intaro\TwigSandboxBundle\Builder;
 
+use Intaro\TwigSandboxBundle\Dumper\DumperInterface;
+use Intaro\TwigSandboxBundle\Dumper\PhpDumper;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
@@ -22,12 +24,14 @@ class EnvironmentBuilder implements WarmableInterface
     private ?SecurityPolicy $policy;
     private $rules;
     private array $extensions = [];
+    private DumperInterface $dumper;
 
-    public function __construct(LoaderInterface $loader, SecurityPolicy $policy = null, array $options = [])
+    public function __construct(LoaderInterface $loader, DumperInterface $dumper, SecurityPolicy $policy = null, array $options = [])
     {
         $this->loader = $loader;
         $this->policy = $policy;
         $this->setOptions($options);
+        $this->dumper = $dumper;
     }
 
     /**
@@ -86,7 +90,6 @@ class EnvironmentBuilder implements WarmableInterface
         $this->options = [
             'cache_dir'      => null,
             'cache_filename' => 'IntaroTwigSandboxPolicy',
-            'dumper_class'   => null,
             'bundles'        => [],
             'debug'          => false,
         ];
@@ -145,8 +148,7 @@ class EnvironmentBuilder implements WarmableInterface
                 }
             }
 
-            $dumper = new $this->options['dumper_class']();
-            $cache->write($dumper->dump($rules), $rules->getResources());
+            $cache->write($this->dumper->dump($rules), $rules->getResources());
         }
 
         $this->rules = include $cache->getPath();

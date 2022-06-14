@@ -4,7 +4,7 @@ namespace Intaro\TwigSandboxBundle\Dumper;
 
 use Intaro\TwigSandboxBundle\SecurityPolicy\SecurityPolicyRules;
 
-class PhpDumper
+class PhpDumper implements DumperInterface
 {
     public function dump(SecurityPolicyRules $rules)
     {
@@ -14,7 +14,7 @@ class PhpDumper
 
         foreach ($rules->getMethods() as $entity => $methods) {
             $result .= "        '$entity' => array(\n";
-            if (sizeof($methods)) {
+            if (count($methods) > 0) {
                 $result .= "            '" . implode("', '", $methods) . "'\n";
             }
             $result .= "        ),\n";
@@ -25,7 +25,7 @@ class PhpDumper
 
         foreach ($rules->getProperties() as $entity => $properties) {
             $result .= "        '$entity' => array(\n";
-            if (sizeof($properties)) {
+            if (count($properties) > 0) {
                 $result .= "            '" . implode("', '", $properties) . "'\n";
             }
             $result .= "        ),\n";
