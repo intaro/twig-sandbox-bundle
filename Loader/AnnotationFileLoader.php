@@ -66,7 +66,7 @@ class AnnotationFileLoader extends FileLoader
      *
      * @return string|false Full class name if found, false otherwise
      */
-    private function findClass(string $file)
+    protected function findClass(string $file)
     {
         $class = false;
         $namespace = false;
