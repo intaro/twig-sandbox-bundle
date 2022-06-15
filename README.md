@@ -13,7 +13,7 @@ Require the bundle in your `composer.json` file:
 ```json
 {
     "require": {
-        "intaro/twig-sandbox-bundle": "^1.0"
+        "intaro/twig-sandbox-bundle": "^2.0"
     }
 }
 ```
@@ -157,29 +157,40 @@ And use sandbox environment.
 ```php
 
 use Acme\DemoBundle\Entity\Product;
+use Intaro\TwigSandboxBundle\Builder\EnvironmentBuilder;
 
-$twig = $this->get('intaro.twig_sandbox.builder')->getSandboxEnvironment();
+class Example {
 
-$product = new Product();
-$product->setName('Product 1');
-$product->setQuantity(5);
-
-//success render
-$html1 = $twig->render(
-    'Product {{ product.name }}',
-    [
-        'product' => $product,
-    ]
-);
-
-//render with exception
-$html2 = $twig->render(
-    'Product {{ product.name }} in the quantity {{ product.quantity }}',
-    [
-        'product' => $product,
-    ]
-);
-
+    private EnvironmentBuilder $environmentBuilder;
+    
+    public function __construct(EnvironmentBuilder $environmentBuilder)
+    {
+        $this->environmentBuilder = $environmentBuilder;
+    }
+    
+    $twig = $this->environmentBuilder->getSandboxEnvironment();
+    
+    $product = new Product();
+    $product->setName('Product 1');
+    $product->setQuantity(5);
+    
+    //success render
+    $html1 = $twig->render(
+        'Product {{ product.name }}',
+        [
+            'product' => $product,
+        ]
+    );
+    
+    //render with exception
+    $html2 = $twig->render(
+        'Product {{ product.name }} in the quantity {{ product.quantity }}',
+        [
+            'product' => $product,
+        ]
+    );
+    
+}
 ```
 
 ### Validation
@@ -337,7 +348,7 @@ parameters:
 You can set twig environment parameters:
 ```php
 
-$twig = $this->get('intaro.twig_sandbox.builder')->getSandboxEnvironment([
+$twig = $this->get(EnvironmentBuilder::class)->getSandboxEnvironment([
     'strict_variables' => true
 ]);
 ```
@@ -373,16 +384,17 @@ namespace Acme\DemoBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Intaro\TwigSandboxBundle\Builder\EnvironmentBuilder;
 
 class TwigSandboxPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('intaro.twig_sandbox.builder')) {
+        if (!$container->hasDefinition(EnvironmentBuilder::class)) {
             return;
         }
 
-        $sandbox = $container->getDefinition('intaro.twig_sandbox.builder');
+        $sandbox = $container->getDefinition(EnvironmentBuilder::class);
         $sandbox->addMethodCall('addExtension', [new Reference('acme_demo.twig_extension')]);
     }
 }
