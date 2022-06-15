@@ -3,9 +3,9 @@
 namespace Intaro\TwigSandboxBundle\Annotation;
 
 /**
-* @Annotation
-* @Target({"METHOD", "PROPERTY"})
-*/
+ * @Annotation
+ * @Target({"METHOD", "PROPERTY"})
+ */
 class Sandbox
 {
     /**

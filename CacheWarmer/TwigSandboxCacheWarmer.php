@@ -2,9 +2,9 @@
 
 namespace Intaro\TwigSandboxBundle\CacheWarmer;
 
+use Intaro\TwigSandboxBundle\Builder\EnvironmentBuilder;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
-use Intaro\TwigSandboxBundle\Builder\EnvironmentBuilder;
 
 class TwigSandboxCacheWarmer implements CacheWarmerInterface
 {
@@ -37,7 +37,7 @@ class TwigSandboxCacheWarmer implements CacheWarmerInterface
      * A warmer should return true if the cache can be
      * generated incrementally and on-demand.
      *
-     * @return Boolean true if the warmer is optional, false otherwise
+     * @return bool true if the warmer is optional, false otherwise
      */
     public function isOptional()
     {

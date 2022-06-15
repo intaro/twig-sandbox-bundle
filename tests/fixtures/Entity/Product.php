@@ -4,8 +4,8 @@ namespace Intaro\TwigSandboxBundle\Tests\fixtures\Entity;
 
 use Intaro\TwigSandboxBundle\Annotation\Sandbox;
 
-class Product {
-
+class Product
+{
     private $id;
     private $name;
     private $quantity;
@@ -14,7 +14,8 @@ class Product {
      * Get id
      *
      * @Sandbox(type="int")
-     * @return integer
+     *
+     * @return int
      */
     public function getId()
     {
@@ -25,6 +26,7 @@ class Product {
      * Set name
      *
      * @param string $name
+     *
      * @return Product
      */
     public function setName($name)
@@ -38,6 +40,7 @@ class Product {
      * Get name
      *
      * @Sandbox
+     *
      * @return string
      */
     public function getName()
@@ -48,7 +51,8 @@ class Product {
     /**
      * Set quantity
      *
-     * @param boolean $quantity
+     * @param bool $quantity
+     *
      * @return Product
      */
     public function setQuantity($quantity)

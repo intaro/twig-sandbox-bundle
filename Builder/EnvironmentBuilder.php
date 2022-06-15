@@ -3,11 +3,10 @@
 namespace Intaro\TwigSandboxBundle\Builder;
 
 use Intaro\TwigSandboxBundle\Dumper\DumperInterface;
-use Intaro\TwigSandboxBundle\Dumper\PhpDumper;
-use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use Intaro\TwigSandboxBundle\SecurityPolicy\SecurityPolicyRules;
+use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\SandboxExtension;
@@ -36,20 +35,14 @@ class EnvironmentBuilder implements WarmableInterface
 
     /**
      * Additional extension for sandbox environment
-     *
-     * @access public
-     * @param AbstractExtension $extension
-     * @return void
      */
-    public function addExtension(AbstractExtension $extension)
+    public function addExtension(AbstractExtension $extension): void
     {
         $this->extensions[] = $extension;
     }
 
     /**
      * @param AbstractExtension[]|array|null $extensions
-     * @return void
-     *
      */
     public function addExtensions(array $extensions = null): void
     {
@@ -85,13 +78,13 @@ class EnvironmentBuilder implements WarmableInterface
         return new TwigAdapter($twig);
     }
 
-    public function setOptions(array $options)
+    public function setOptions(array $options): void
     {
         $this->options = [
-            'cache_dir'      => null,
+            'cache_dir' => null,
             'cache_filename' => 'IntaroTwigSandboxPolicy',
-            'bundles'        => [],
-            'debug'          => false,
+            'bundles' => [],
+            'debug' => false,
         ];
 
         // check option names and live merge, if errors are encountered Exception will be thrown
@@ -109,7 +102,7 @@ class EnvironmentBuilder implements WarmableInterface
         }
     }
 
-    private function initSecurityPolicy()
+    private function initSecurityPolicy(): void
     {
         $rules = $this->getPolicyRules();
 
@@ -171,5 +164,4 @@ class EnvironmentBuilder implements WarmableInterface
 
         return [];
     }
-
 }
