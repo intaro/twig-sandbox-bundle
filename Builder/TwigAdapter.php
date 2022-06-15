@@ -6,7 +6,6 @@ use Twig\Environment;
 
 class TwigAdapter
 {
-
     private Environment $twigEnvironment;
 
     public function __construct(Environment $twigEnvironment)

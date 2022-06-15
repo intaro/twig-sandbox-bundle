@@ -6,8 +6,8 @@ use Intaro\TwigSandboxBundle\Builder\EnvironmentBuilder;
 use Intaro\TwigSandboxBundle\IntaroTwigSandboxBundle;
 use Intaro\TwigSandboxBundle\Tests\fixtures\Entity\Product;
 use Intaro\TwigSandboxBundle\Tests\fixtures\FixtureBundle;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Nyholm\BundleTest\TestKernel;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedMethodError;
@@ -40,7 +40,7 @@ class BundleInitializationTest extends KernelTestCase
         $this->assertInstanceOf(EnvironmentBuilder::class, $service);
     }
 
-    public function testRender()
+    public function testRender(): void
     {
         self::bootKernel();
         $container = self::$container;
@@ -55,7 +55,7 @@ class BundleInitializationTest extends KernelTestCase
         $this->assertEquals('Product Product 1', $html);
     }
 
-    public function testRenderWithFilter()
+    public function testRenderWithFilter(): void
     {
         self::bootKernel();
         $container = self::$container;
@@ -70,7 +70,7 @@ class BundleInitializationTest extends KernelTestCase
         $this->assertEquals('Product product 1', $html);
     }
 
-    public function testRenderError()
+    public function testRenderError(): void
     {
         $this->expectException(SecurityNotAllowedMethodError::class);
         $this->expectExceptionMessageMatches('/Calling "getquantity" method on a ".*Product" object is not allowed in/');
@@ -91,7 +91,7 @@ class BundleInitializationTest extends KernelTestCase
         $this->expectException(SecurityNotAllowedFilterError::class);
         $this->expectExceptionMessageMatches('/Filter "lower" is not allowed in/');
 
-        $kernel = self::bootKernel(['config' => static function (TestKernel $kernel) {
+        $kernel = self::bootKernel(['config' => static function (TestKernel $kernel): void {
             $kernel->addTestBundle(IntaroTwigSandboxBundle::class);
             $kernel->addTestBundle(FixtureBundle::class);
 
@@ -117,5 +117,4 @@ class BundleInitializationTest extends KernelTestCase
 
         return $product;
     }
-
 }

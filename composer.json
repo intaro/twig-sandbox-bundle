@@ -48,7 +48,8 @@
         "symfony/translation-contracts": "^1.1|^2.0",
         "symfony/var-exporter": "^4.4|^5.0",
         "symfony/var-dumper": "^4.4|^5.0",
-        "psr/log": "~1.0"
+        "psr/log": "~1.0",
+        "friendsofphp/php-cs-fixer": "3.4"
     },
     "autoload-dev": {
         "psr-4": {
@@ -59,6 +60,9 @@
         "test": "vendor/bin/phpunit --color=always",
         "static-analysis": [
             "phpstan analyse --ansi --memory-limit=1G"
+        ],
+        "phpcs": [
+            "vendor/bin/php-cs-fixer fix --dry-run --config=.php-cs-fixer.dist.php --using-cache=no --show-progress=none -v"
         ],
         "docker-clean": "docker image rm $(docker image ls -qf reference=twig-sandbox-bundle-test)",
         "docker": "docker build . -t twig-sandbox-bundle-test && docker image prune -f >/dev/null && docker run --rm twig-sandbox-bundle-test"

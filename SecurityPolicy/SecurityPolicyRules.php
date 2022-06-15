@@ -30,7 +30,7 @@ class SecurityPolicyRules
         return $this->properties;
     }
 
-    public function addMethod($class, $method)
+    public function addMethod($class, $method): void
     {
         if (!isset($this->methods[$class])) {
             $this->methods[$class] = [];
@@ -41,7 +41,7 @@ class SecurityPolicyRules
         }
     }
 
-    public function addProperty($class, $property)
+    public function addProperty($class, $property): void
     {
         if (!isset($this->properties[$class])) {
             $this->properties[$class] = [];
@@ -67,12 +67,12 @@ class SecurityPolicyRules
      *
      * @param ResourceInterface $resource A resource instance
      */
-    public function addResource(ResourceInterface $resource)
+    public function addResource(ResourceInterface $resource): void
     {
         $this->resources[] = $resource;
     }
 
-    public function merge(SecurityPolicyRules $rules)
+    public function merge(self $rules): void
     {
         $this->resources = array_merge($this->resources, $rules->getResources());
 

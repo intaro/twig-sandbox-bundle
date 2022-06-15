@@ -2,10 +2,10 @@
 
 namespace Intaro\TwigSandboxBundle\Loader;
 
-use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\Config\Loader\FileLoader;
-use Symfony\Component\Config\FileLocator;
 use Intaro\TwigSandboxBundle\SecurityPolicy\SecurityPolicyRules;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\FileLoader;
+use Symfony\Component\Config\Resource\FileResource;
 
 class AnnotationFileLoader extends FileLoader
 {
@@ -14,9 +14,8 @@ class AnnotationFileLoader extends FileLoader
     /**
      * Constructor.
      *
-     * @param FileLocator $locator A FileLocator instance
-     * @param AnnotationClassLoader $loader An AnnotationClassLoader instance
-     * @param string|null $env
+     * @param FileLocator           $locator A FileLocator instance
+     * @param AnnotationClassLoader $loader  An AnnotationClassLoader instance
      */
     public function __construct(FileLocator $locator, AnnotationClassLoader $loader, string $env = null)
     {
@@ -67,12 +66,12 @@ class AnnotationFileLoader extends FileLoader
      *
      * @return string|false Full class name if found, false otherwise
      */
-    protected function findClass($file)
+    private function findClass(string $file)
     {
         $class = false;
         $namespace = false;
         $tokens = token_get_all(file_get_contents($file));
-        for ($i = 0, $count = count($tokens); $i < $count; $i++) {
+        for ($i = 0, $count = count($tokens); $i < $count; ++$i) {
             $token = $tokens[$i];
 
             if (!is_array($token)) {
@@ -88,7 +87,7 @@ class AnnotationFileLoader extends FileLoader
                 do {
                     $namespace .= $token[1];
                     $token = $tokens[++$i];
-                } while ($i < $count && is_array($token) && in_array($token[0], array(T_NS_SEPARATOR, T_STRING)));
+                } while ($i < $count && is_array($token) && in_array($token[0], [T_NS_SEPARATOR, T_STRING]));
             }
 
             if (T_CLASS === $token[0]) {

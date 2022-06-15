@@ -3,15 +3,15 @@
 namespace Intaro\TwigSandboxBundle\Loader;
 
 use Doctrine\Common\Annotations\Reader;
+use Intaro\TwigSandboxBundle\SecurityPolicy\SecurityPolicyRules;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Config\Resource\FileResource;
-use Intaro\TwigSandboxBundle\SecurityPolicy\SecurityPolicyRules;
 
 class AnnotationClassLoader implements LoaderInterface
 {
     protected $reader;
-    protected $annotationClass  = 'Intaro\\TwigSandboxBundle\\Annotation\\Sandbox';
+    protected $annotationClass = 'Intaro\\TwigSandboxBundle\\Annotation\\Sandbox';
 
     public function __construct(Reader $reader)
     {
@@ -23,7 +23,7 @@ class AnnotationClassLoader implements LoaderInterface
      *
      * @param string $class A fully-qualified class name
      */
-    public function setAnnotationClass($class)
+    public function setAnnotationClass($class): void
     {
         $this->annotationClass = $class;
     }
@@ -83,7 +83,7 @@ class AnnotationClassLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function setResolver(LoaderResolverInterface $resolver)
+    public function setResolver(LoaderResolverInterface $resolver): void
     {
     }
 

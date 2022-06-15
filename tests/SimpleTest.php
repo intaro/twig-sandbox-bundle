@@ -12,8 +12,7 @@ use Symfony\Component\Config\FileLocator;
 
 class SimpleTest extends TestCase
 {
-
-    public function testRender()
+    public function testRender(): void
     {
         $twigAdapter = $this->createTwigEnv();
 
@@ -28,7 +27,6 @@ class SimpleTest extends TestCase
         ]);
 
         $this->assertEquals('Product Product 1', $html);
-
 
         $html = $twigAdapter->render('Product {{ product.name }}', [
             'product' => $product,
