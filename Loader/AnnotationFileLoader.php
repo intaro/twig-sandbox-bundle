@@ -31,7 +31,7 @@ class AnnotationFileLoader extends Loader
      *
      * @throws \InvalidArgumentException When annotations can't be parsed
      */
-    public function load($path, string $type = null)
+    public function load($path, $type = null)
     {
         $rules = new SecurityPolicyRules();
         if ($class = $this->findClass($path)) {

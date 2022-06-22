@@ -7,7 +7,15 @@ use Symfony\Component\Config\Resource\DirectoryResource;
 
 class AnnotationDirectoryLoader extends AnnotationFileLoader
 {
-    public function load($dir, string $type = null)
+    /**
+     * @param $dir
+     * @param $type
+     *
+     * @return SecurityPolicyRules
+     *
+     * @throws \ReflectionException
+     */
+    public function load($dir, $type = null)
     {
         $rules = new SecurityPolicyRules();
         $rules->addResource(new DirectoryResource($dir, '/\.php$/'));
