@@ -10,15 +10,13 @@ class AnnotationFileLoader extends Loader
 {
     protected $loader;
 
-    public function __construct(AnnotationClassLoader $loader, string $env = null)
+    public function __construct(AnnotationClassLoader $loader)
     {
         if (!function_exists('token_get_all')) {
             throw new \RuntimeException('The Tokenizer extension is required for the routing annotation loaders.');
         }
 
         $this->loader = $loader;
-
-        parent::__construct($env);
     }
 
     /**
