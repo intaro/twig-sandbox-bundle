@@ -69,13 +69,8 @@ services:
         autoconfigure: true
 
     Intaro\TwigSandboxBundle\Loader\AnnotationClassLoader: ~
-    Intaro\TwigSandboxBundle\Loader\AnnotationDirectoryLoader:
-        arguments:
-            $locator: '@file_locator'
-
-    Intaro\TwigSandboxBundle\Loader\AnnotationFileLoader:
-        arguments:
-            $locator: '@file_locator'
+    Intaro\TwigSandboxBundle\Loader\AnnotationDirectoryLoader: ~
+    Intaro\TwigSandboxBundle\Loader\AnnotationFileLoader: ~
 
     intaro.twig_sandbox.loader_resolver:
         class: Symfony\Component\Config\Loader\LoaderResolver

@@ -3,45 +3,36 @@
 namespace Intaro\TwigSandboxBundle\Loader;
 
 use Intaro\TwigSandboxBundle\SecurityPolicy\SecurityPolicyRules;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Loader\FileLoader;
+use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Config\Resource\FileResource;
 
-class AnnotationFileLoader extends FileLoader
+class AnnotationFileLoader extends Loader
 {
     protected $loader;
 
-    /**
-     * Constructor.
-     *
-     * @param FileLocator           $locator A FileLocator instance
-     * @param AnnotationClassLoader $loader  An AnnotationClassLoader instance
-     */
-    public function __construct(FileLocator $locator, AnnotationClassLoader $loader, string $env = null)
+    public function __construct(AnnotationClassLoader $loader, string $env = null)
     {
         if (!function_exists('token_get_all')) {
             throw new \RuntimeException('The Tokenizer extension is required for the routing annotation loaders.');
         }
 
-        parent::__construct($locator, $env);
-
         $this->loader = $loader;
+
+        parent::__construct($env);
     }
 
     /**
      * Loads from annotations from a file.
      *
-     * @param string $file A PHP file path
+     * @param string $path A PHP file path
      * @param string $type The resource type
      *
      * @return SecurityPolicyRules A Rules instance
      *
      * @throws \InvalidArgumentException When annotations can't be parsed
      */
-    public function load($file, $type = null)
+    public function load($path, string $type = null)
     {
-        $path = $this->locator->locate($file);
-
         $rules = new SecurityPolicyRules();
         if ($class = $this->findClass($path)) {
             $rules->addResource(new FileResource($path));

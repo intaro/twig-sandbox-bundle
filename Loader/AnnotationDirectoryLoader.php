@@ -7,20 +7,8 @@ use Symfony\Component\Config\Resource\DirectoryResource;
 
 class AnnotationDirectoryLoader extends AnnotationFileLoader
 {
-    /**
-     * Loads from annotations from a directory.
-     *
-     * @param string $path A directory path
-     * @param string $type The resource type
-     *
-     * @return SecurityPolicyRules A Rules instance
-     *
-     * @throws \InvalidArgumentException When annotations can't be parsed
-     */
-    public function load($path, $type = null)
+    public function load($dir, string $type = null)
     {
-        $dir = $this->locator->locate($path);
-
         $rules = new SecurityPolicyRules();
         $rules->addResource(new DirectoryResource($dir, '/\.php$/'));
         $files = iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir), \RecursiveIteratorIterator::LEAVES_ONLY));
@@ -51,12 +39,6 @@ class AnnotationDirectoryLoader extends AnnotationFileLoader
      */
     public function supports($resource, $type = null): bool
     {
-        try {
-            $path = $this->locator->locate($resource);
-        } catch (\Exception $e) {
-            return false;
-        }
-
-        return is_string($resource) && is_dir($path) && (!$type || 'annotation' === $type);
+        return is_string($resource) && is_dir($resource) && (!$type || 'annotation' === $type);
     }
 }
