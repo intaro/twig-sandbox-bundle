@@ -8,7 +8,6 @@ use Intaro\TwigSandboxBundle\Loader\AnnotationDirectoryLoader;
 use Intaro\TwigSandboxBundle\Loader\AnnotationFileLoader;
 use Intaro\TwigSandboxBundle\Tests\fixtures\Entity\Product;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Config\FileLocator;
 
 class SimpleTest extends TestCase
 {
@@ -38,8 +37,8 @@ class SimpleTest extends TestCase
     private function createTwigEnv()
     {
         $annotationClassLoader = new AnnotationClassLoader(new \Doctrine\Common\Annotations\AnnotationReader());
-        $annotationDirectoryLoader = new AnnotationDirectoryLoader(new FileLocator(), $annotationClassLoader);
-        $annotationFileLoader = new AnnotationFileLoader(new FileLocator(), $annotationClassLoader);
+        $annotationDirectoryLoader = new AnnotationDirectoryLoader($annotationClassLoader);
+        $annotationFileLoader = new AnnotationFileLoader($annotationClassLoader);
 
         $loaderResolver = new \Symfony\Component\Config\Loader\LoaderResolver([
                 $annotationDirectoryLoader,
