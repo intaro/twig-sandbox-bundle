@@ -62,7 +62,7 @@
             "phpstan analyse --ansi --memory-limit=1G"
         ],
         "phpcs": [
-            "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --using-cache=no --show-progress=none -v"
+            "vendor/bin/php-cs-fixer fix --dry-run --config=.php-cs-fixer.dist.php --using-cache=no --show-progress=none -v"
         ],
         "docker-clean": "docker image rm $(docker image ls -qf reference=twig-sandbox-bundle-test)",
         "docker": "docker build . -t twig-sandbox-bundle-test && docker image prune -f >/dev/null && docker run --rm twig-sandbox-bundle-test"
