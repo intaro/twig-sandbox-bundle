@@ -71,34 +71,60 @@ class AnnotationFileLoader extends FileLoader
         $class = false;
         $namespace = false;
         $tokens = token_get_all(file_get_contents($file));
-        for ($i = 0, $count = count($tokens); $i < $count; ++$i) {
+
+        if (1 === \count($tokens) && \T_INLINE_HTML === $tokens[0][0]) {
+            throw new \InvalidArgumentException(sprintf('The file "%s" does not contain PHP code. Did you forgot to add the "<?php" start tag at the beginning of the file?', $file));
+        }
+
+        $nsTokens = [\T_NS_SEPARATOR => true, \T_STRING => true];
+        if (\defined('T_NAME_QUALIFIED')) {
+            $nsTokens[\T_NAME_QUALIFIED] = true;
+        }
+
+        for ($i = 0; isset($tokens[$i]); ++$i) {
             $token = $tokens[$i];
 
-            if (!is_array($token)) {
+            if (!isset($token[1])) {
                 continue;
             }
 
-            if (true === $class && T_STRING === $token[0]) {
+            if (true === $class && \T_STRING === $token[0]) {
                 return $namespace . '\\' . $token[1];
             }
 
-            if (true === $namespace && T_STRING === $token[0]) {
-                $namespace = '';
-                do {
-                    $namespace .= $token[1];
-                    $token = $tokens[++$i];
-                } while ($i < $count && is_array($token) && in_array($token[0], [T_NS_SEPARATOR, T_STRING]));
-            }
-
-            if (T_CLASS === $token[0]) {
-                // Entity::class bug
-                if ($i > 0 && T_PAAMAYIM_NEKUDOTAYIM === $tokens[$i - 1][0]) {
-                    continue;
+            if (true === $namespace && isset($nsTokens[$token[0]])) {
+                $namespace = $token[1];
+                while (isset($tokens[++$i][1], $nsTokens[$tokens[$i][0]])) {
+                    $namespace .= $tokens[$i][1];
                 }
-                $class = true;
+                $token = $tokens[$i];
             }
 
-            if (T_NAMESPACE === $token[0]) {
+            if (\T_CLASS === $token[0]) {
+                // Skip usage of ::class constant and anonymous classes
+                $skipClassToken = false;
+                for ($j = $i - 1; $j > 0; --$j) {
+                    if (!isset($tokens[$j][1])) {
+                        if ('(' === $tokens[$j] || ',' === $tokens[$j]) {
+                            $skipClassToken = true;
+                        }
+                        break;
+                    }
+
+                    if (\T_DOUBLE_COLON === $tokens[$j][0] || \T_NEW === $tokens[$j][0]) {
+                        $skipClassToken = true;
+                        break;
+                    } elseif (!\in_array($tokens[$j][0], [\T_WHITESPACE, \T_DOC_COMMENT, \T_COMMENT])) {
+                        break;
+                    }
+                }
+
+                if (!$skipClassToken) {
+                    $class = true;
+                }
+            }
+
+            if (\T_NAMESPACE === $token[0]) {
                 $namespace = true;
             }
         }
