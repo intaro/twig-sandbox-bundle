@@ -44,10 +44,11 @@ $ composer require intaro/twig-sandbox-bundle
 ## Usage
 
 Define allowed properties and methods for your entities using annotation `@Sandbox`.
-Optionally you can add `type` option for annotation.
-This option defines type of value that property stores or method returns.
+Optional attributes:
+* `type`: This option defines type of value that property stores or method returns
+* `target`: This option defines fully qualified class name of object that property stores or method returns
 
-In your application you can use annotation reader to extract value of `type` option and use this value
+In your application you can use annotation reader to extract values of options and use this values
 to perform additional checks or any other actions, for example, use twig filters according to value of the option.
 
 ```php
