@@ -1,0 +1,9 @@
+framework:
+    http_method_override: false
+    handle_all_throwables: true
+    session:
+        cookie_secure: auto
+        cookie_samesite: lax
+        handler_id: ~
+    php_errors:
+        log: true

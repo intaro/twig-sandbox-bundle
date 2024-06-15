@@ -20,6 +20,12 @@ jobs:
         symfony-version:
           - '4.4.*'
           - '5.4.*'
+          - '6.3.*'
+        exclude:
+          - php-version: '7.4'
+            symfony-version: '6.3.*'
+          - php-version: '8.0'
+            symfony-version: '6.3.*'
         coverage: [ 'none' ]
     steps:
       - name: "Checkout"

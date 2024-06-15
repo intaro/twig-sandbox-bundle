@@ -42,7 +42,7 @@ class EnvironmentBuilder implements WarmableInterface
     }
 
     /**
-     * @param AbstractExtension[]|array|null $extensions
+     * @param AbstractExtension[]|null $extensions
      */
     public function addExtensions(array $extensions = null): void
     {
@@ -149,10 +149,7 @@ class EnvironmentBuilder implements WarmableInterface
         return $this->rules;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function warmUp($cacheDir): array
+    public function warmUp(/*string */ $cacheDir/*, ?string $buildDir = null*/)/*: array*/
     {
         $currentDir = $this->options['cache_dir'];
 
