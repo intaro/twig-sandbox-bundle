@@ -398,3 +398,18 @@ class TwigSandboxPass implements CompilerPassInterface
         $sandbox->addMethodCall('addExtension', [new Reference('acme_demo.twig_extension')]);
     }
 }
+```
+
+## Development ##
+
+### Run tests ###
+
+Install vendors:
+```shell
+make vendor
+```
+
+Run php-cs-fixer, phpstan and phpunit:
+```shell
+make check
+```
