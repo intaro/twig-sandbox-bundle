@@ -3,9 +3,6 @@ includes:
 
 parameters:
   level: 5
-  reportUnmatchedIgnoredErrors: false
-  checkMissingIterableValueType: false
-  checkGenericClassInNonGenericObjectType: false
   paths:
     - %currentWorkingDirectory%/Annotation
     - %currentWorkingDirectory%/Builder
