@@ -15,12 +15,7 @@ class TwigSandboxCacheWarmer implements CacheWarmerInterface
         $this->environmentBuilder = $builder;
     }
 
-    /**
-     * Warms up the cache.
-     *
-     * @param string $cacheDir The cache directory
-     */
-    public function warmUp($cacheDir): array
+    public function warmUp(/*string */ $cacheDir/*, ?string $buildDir = null*/)/*: array*/
     {
         if ($this->environmentBuilder instanceof WarmableInterface) {
             return $this->environmentBuilder->warmUp($cacheDir);
@@ -29,17 +24,7 @@ class TwigSandboxCacheWarmer implements CacheWarmerInterface
         return [];
     }
 
-    /**
-     * Checks whether this warmer is optional or not.
-     *
-     * Optional warmers can be ignored on certain conditions.
-     *
-     * A warmer should return true if the cache can be
-     * generated incrementally and on-demand.
-     *
-     * @return bool true if the warmer is optional, false otherwise
-     */
-    public function isOptional()
+    public function isOptional(): bool
     {
         return true;
     }

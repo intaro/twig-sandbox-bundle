@@ -21,7 +21,11 @@ class BundleInitializationTest extends KernelTestCase
 
     protected static function createKernel(array $options = []): KernelInterface
     {
+        /** @var TestKernel $kernel */
         $kernel = parent::createKernel($options);
+        if ($kernel::MAJOR_VERSION >= 6) {
+            $kernel->addTestConfig(__DIR__ . '/config/framework.yaml');
+        }
         $kernel->addTestBundle(IntaroTwigSandboxBundle::class);
         $kernel->addTestBundle(FixtureBundle::class);
         $kernel->handleOptions($options);
@@ -32,7 +36,7 @@ class BundleInitializationTest extends KernelTestCase
     public function testInitBundle(): void
     {
         self::bootKernel();
-        $container = self::$container;
+        $container = property_exists(__CLASS__, 'container') ? self::$container : self::getContainer();
 
         $this->assertTrue($container->has(EnvironmentBuilder::class));
         $this->assertTrue($container->has(\Intaro\TwigSandboxBundle\Builder\EnvironmentBuilder::class));
@@ -43,7 +47,7 @@ class BundleInitializationTest extends KernelTestCase
     public function testRender(): void
     {
         self::bootKernel();
-        $container = self::$container;
+        $container = property_exists(__CLASS__, 'container') ? self::$container : self::getContainer();
 
         $twig = $container->get(EnvironmentBuilder::class)->getSandboxEnvironment();
         $tpl = $twig->createTemplate('Product {{ product.name }}');
@@ -58,7 +62,7 @@ class BundleInitializationTest extends KernelTestCase
     public function testRenderWithFilter(): void
     {
         self::bootKernel();
-        $container = self::$container;
+        $container = property_exists(__CLASS__, 'container') ? self::$container : self::getContainer();
 
         $twig = $container->get(EnvironmentBuilder::class)->getSandboxEnvironment();
         $tpl = $twig->createTemplate('Product {{ product.name|lower }}');
@@ -76,7 +80,7 @@ class BundleInitializationTest extends KernelTestCase
         $this->expectExceptionMessageMatches('/Calling "getquantity" method on a ".*Product" object is not allowed in/');
 
         self::bootKernel();
-        $container = self::$container;
+        $container = property_exists(__CLASS__, 'container') ? self::$container : self::getContainer();
 
         $twig = $container->get(EnvironmentBuilder::class)->getSandboxEnvironment();
         $tpl = $twig->createTemplate('Product {{ product.quantity }}');
@@ -98,7 +102,7 @@ class BundleInitializationTest extends KernelTestCase
             $kernel->addTestConfig(__DIR__ . '/fixtures/empty-config.yml');
         }]);
 
-        $container = self::$container;
+        $container = property_exists(__CLASS__, 'container') ? self::$container : self::getContainer();
         $twig = $container->get(EnvironmentBuilder::class)->getSandboxEnvironment();
         $tpl = $twig->createTemplate('Product {{ product.name|lower }}');
 
