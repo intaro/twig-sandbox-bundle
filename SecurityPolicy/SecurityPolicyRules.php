@@ -9,10 +9,18 @@ use Symfony\Component\Config\Resource\ResourceInterface;
  */
 class SecurityPolicyRules
 {
-    private $methods;
-    private $properties;
-    private $resources;
+    /** @var array<string, string[]> */
+    private array $methods;
+    /** @var array<string, string[]> */
+    private array $properties;
+    /** @var ResourceInterface[] */
+    private array $resources;
 
+    /**
+     * @param array<string, string[]> $methods
+     * @param array<string, string[]> $properties
+     * @param ResourceInterface[]     $resources
+     */
     public function __construct(array $methods = [], array $properties = [], array $resources = [])
     {
         $this->methods = $methods;
@@ -20,17 +28,23 @@ class SecurityPolicyRules
         $this->resources = $resources;
     }
 
-    public function getMethods()
+    /**
+     * @return array<string, string[]>
+     */
+    public function getMethods(): array
     {
         return $this->methods;
     }
 
-    public function getProperties()
+    /**
+     * @return array<string, string[]>
+     */
+    public function getProperties(): array
     {
         return $this->properties;
     }
 
-    public function addMethod($class, $method): void
+    public function addMethod(string $class, string $method): void
     {
         if (!isset($this->methods[$class])) {
             $this->methods[$class] = [];
@@ -41,7 +55,7 @@ class SecurityPolicyRules
         }
     }
 
-    public function addProperty($class, $property): void
+    public function addProperty(string $class, string $property): void
     {
         if (!isset($this->properties[$class])) {
             $this->properties[$class] = [];
@@ -57,7 +71,7 @@ class SecurityPolicyRules
      *
      * @return ResourceInterface[] An array of resources
      */
-    public function getResources()
+    public function getResources(): array
     {
         return array_unique($this->resources);
     }

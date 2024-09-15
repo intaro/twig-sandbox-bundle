@@ -10,8 +10,8 @@ use Symfony\Component\Config\Resource\FileResource;
 
 class AnnotationClassLoader implements LoaderInterface
 {
-    protected $reader;
-    protected $annotationClass = 'Intaro\\TwigSandboxBundle\\Annotation\\Sandbox';
+    protected Reader $reader;
+    protected string $annotationClass = 'Intaro\\TwigSandboxBundle\\Annotation\\Sandbox';
 
     public function __construct(Reader $reader)
     {
@@ -23,7 +23,7 @@ class AnnotationClassLoader implements LoaderInterface
      *
      * @param string $class A fully-qualified class name
      */
-    public function setAnnotationClass($class): void
+    public function setAnnotationClass(string $class): void
     {
         $this->annotationClass = $class;
     }
@@ -38,7 +38,7 @@ class AnnotationClassLoader implements LoaderInterface
      *
      * @throws \InvalidArgumentException When annotations can't be parsed
      */
-    public function load($class, $type = null)
+    public function load($class, $type = null): SecurityPolicyRules
     {
         if (!class_exists($class)) {
             throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
@@ -50,7 +50,7 @@ class AnnotationClassLoader implements LoaderInterface
         }
 
         $rules = new SecurityPolicyRules();
-        $rules->addResource(new FileResource($class->getFileName()));
+        $rules->addResource(new FileResource((string) $class->getFileName()));
 
         foreach ($class->getMethods() as $method) {
             foreach ($this->reader->getMethodAnnotations($method) as $annot) {
@@ -73,7 +73,7 @@ class AnnotationClassLoader implements LoaderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param ?string $type
      */
     public function supports($resource, $type = null): bool
     {

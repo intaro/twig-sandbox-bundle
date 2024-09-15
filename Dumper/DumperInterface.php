@@ -6,5 +6,5 @@ use Intaro\TwigSandboxBundle\SecurityPolicy\SecurityPolicyRules;
 
 interface DumperInterface
 {
-    public function dump(SecurityPolicyRules $rules);
+    public function dump(SecurityPolicyRules $rules): string;
 }

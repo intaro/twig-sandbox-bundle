@@ -6,7 +6,7 @@ use Intaro\TwigSandboxBundle\SecurityPolicy\SecurityPolicyRules;
 
 class PhpDumper implements DumperInterface
 {
-    public function dump(SecurityPolicyRules $rules)
+    public function dump(SecurityPolicyRules $rules): string
     {
         $result = "<?php\n";
         $result .= "return new Intaro\TwigSandboxBundle\SecurityPolicy\SecurityPolicyRules(\n";

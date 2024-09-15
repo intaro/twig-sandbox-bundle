@@ -7,10 +7,10 @@ namespace Intaro\TwigSandboxBundle\Validator\Constraints;
  */
 class TwigSandbox extends \Symfony\Component\Validator\Constraint
 {
-    public $message = 'This value is not a valid Twig template. The parsing error is: {{ syntax_error }}';
-    public $criticalErrorMessage = 'Critical error occurred while rendering the template. Please check the correctness of template syntax.';
+    public string $message = 'This value is not a valid Twig template. The parsing error is: {{ syntax_error }}';
+    public string $criticalErrorMessage = 'Critical error occurred while rendering the template. Please check the correctness of template syntax.';
 
-    public function validatedBy()
+    public function validatedBy(): string
     {
         return 'twig_sandbox';
     }

@@ -10,14 +10,14 @@ class AnnotationDirectoryLoader extends AnnotationFileLoader
     /**
      * Loads from annotations from a directory.
      *
-     * @param string $path A directory path
-     * @param string $type The resource type
+     * @param string  $path A directory path
+     * @param ?string $type The resource type
      *
      * @return SecurityPolicyRules A Rules instance
      *
      * @throws \InvalidArgumentException When annotations can't be parsed
      */
-    public function load($path, $type = null)
+    public function load($path, $type = null): SecurityPolicyRules
     {
         $dir = $this->locator->locate($path);
 
@@ -47,7 +47,7 @@ class AnnotationDirectoryLoader extends AnnotationFileLoader
     }
 
     /**
-     * {@inheritdoc}
+     * @param ?string $type
      */
     public function supports($resource, $type = null): bool
     {

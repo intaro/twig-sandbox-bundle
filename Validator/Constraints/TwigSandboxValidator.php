@@ -3,25 +3,27 @@
 namespace Intaro\TwigSandboxBundle\Validator\Constraints;
 
 use Intaro\TwigSandboxBundle\Builder\EnvironmentBuilder;
+use Intaro\TwigSandboxBundle\Builder\TwigAdapter;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class TwigSandboxValidator extends ConstraintValidator
 {
-    private $builder;
+    private EnvironmentBuilder $builder;
 
     public function __construct(EnvironmentBuilder $builder)
     {
         $this->builder = $builder;
     }
 
-    public function getTwig()
+    public function getTwig(): TwigAdapter
     {
         return $this->builder->getSandboxEnvironment();
     }
 
     /**
-     * @param \Intaro\TwigSandboxBundle\Validator\Constraints\TwigSandbox $constraint
+     * @param mixed       $value
+     * @param TwigSandbox $constraint
      */
     public function validate($value, Constraint $constraint): void
     {
@@ -32,7 +34,7 @@ class TwigSandboxValidator extends ConstraintValidator
         $twig = $this->getTwig();
 
         try {
-            $twig->createTemplate($value);
+            $twig->createTemplate((string) $value);
         } catch (\Twig\Sandbox\SecurityError $e) {
             $message = mb_strlen($e->getMessage()) > 150 ? mb_substr($e->getMessage(), 0, 150) . '…' : $e->getMessage();
 
