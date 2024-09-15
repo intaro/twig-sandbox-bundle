@@ -4,6 +4,9 @@ namespace Intaro\TwigSandboxBundle\Builder;
 
 use Twig\Environment;
 
+/**
+ * @mixin Environment
+ */
 class TwigAdapter
 {
     private Environment $twigEnvironment;
@@ -13,20 +16,29 @@ class TwigAdapter
         $this->twigEnvironment = $twigEnvironment;
     }
 
+    /**
+     * @param mixed[] $args
+     *
+     * @return mixed
+     */
     public function __call(string $method, array $args)
     {
         if (method_exists($this, $method)) {
-            return $this->{$method(...$args)};
+            return $this->$method(...$args);
         }
 
-        return $this->twigEnvironment->{$method}(...$args);
+        return $this->twigEnvironment->$method(...$args);
     }
 
-    public function render($template, array $context = []): string
+    /**
+     * @param array<string, mixed> $context
+     */
+    public function render(string $template, array $context = []): string
     {
-        $template = $this->twigEnvironment->createTemplate($template);
-
-        return $template->render($context);
+        return $this->twigEnvironment
+            ->createTemplate($template)
+            ->render($context)
+        ;
     }
 
     public function getTwig(): Environment

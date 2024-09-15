@@ -19,12 +19,17 @@ use Twig\Sandbox\SecurityPolicy;
 class EnvironmentBuilder implements WarmableInterface
 {
     private LoaderInterface $loader;
-    private $options;
+    /** @var array<string, mixed> */
+    private array $options;
     private ?SecurityPolicy $policy;
-    private $rules;
+    private ?SecurityPolicyRules $rules = null;
+    /** @var AbstractExtension[] */
     private array $extensions = [];
     private DumperInterface $dumper;
 
+    /**
+     * @param array<string, mixed> $options
+     */
     public function __construct(LoaderInterface $loader, DumperInterface $dumper, SecurityPolicy $policy = null, array $options = [])
     {
         $this->loader = $loader;
@@ -44,7 +49,7 @@ class EnvironmentBuilder implements WarmableInterface
     /**
      * @param AbstractExtension[]|null $extensions
      */
-    public function addExtensions(array $extensions = null): void
+    public function addExtensions(?array $extensions = null): void
     {
         if (!is_array($extensions)) {
             return;
@@ -57,8 +62,10 @@ class EnvironmentBuilder implements WarmableInterface
 
     /**
      * Формирует окружение для Twig Sandbox
+     *
+     * @param array<string, mixed> $params
      */
-    public function getSandboxEnvironment($params = [], SecurityPolicy $securityPolicy = null): TwigAdapter
+    public function getSandboxEnvironment(array $params = [], SecurityPolicy $securityPolicy = null): TwigAdapter
     {
         $loader = new ArrayLoader();
         $twig = new Environment($loader, $params);
@@ -78,6 +85,9 @@ class EnvironmentBuilder implements WarmableInterface
         return new TwigAdapter($twig);
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     public function setOptions(array $options): void
     {
         $this->options = [
@@ -102,6 +112,9 @@ class EnvironmentBuilder implements WarmableInterface
         }
     }
 
+    /**
+     * @phpstan-assert SecurityPolicy $this->policy
+     */
     private function initSecurityPolicy(): void
     {
         $rules = $this->getPolicyRules();
@@ -114,7 +127,7 @@ class EnvironmentBuilder implements WarmableInterface
         $this->policy->setAllowedMethods($rules->getMethods());
     }
 
-    public function getPolicyRules()
+    public function getPolicyRules(): SecurityPolicyRules
     {
         if ($this->rules) {
             return $this->rules;
@@ -135,7 +148,7 @@ class EnvironmentBuilder implements WarmableInterface
             foreach ($this->options['bundles'] as $bundle) {
                 $refl = new \ReflectionClass($bundle);
 
-                $dir = dirname($refl->getFileName()) . '/Entity';
+                $dir = dirname((string) $refl->getFileName()) . '/Entity';
                 if (file_exists($dir) && is_dir($dir)) {
                     $rules->merge($this->loader->load($dir));
                 }
@@ -149,6 +162,9 @@ class EnvironmentBuilder implements WarmableInterface
         return $this->rules;
     }
 
+    /**
+     * @param string $cacheDir
+     */
     public function warmUp(/*string */ $cacheDir/*, ?string $buildDir = null*/)/*: array*/
     {
         $currentDir = $this->options['cache_dir'];

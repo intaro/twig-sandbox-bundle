@@ -9,7 +9,7 @@ use Symfony\Component\Config\Resource\FileResource;
 
 class AnnotationFileLoader extends FileLoader
 {
-    protected $loader;
+    protected AnnotationClassLoader $loader;
 
     /**
      * Constructor.
@@ -31,14 +31,14 @@ class AnnotationFileLoader extends FileLoader
     /**
      * Loads from annotations from a file.
      *
-     * @param string $file A PHP file path
-     * @param string $type The resource type
+     * @param string  $file A PHP file path
+     * @param ?string $type The resource type
      *
      * @return SecurityPolicyRules A Rules instance
      *
      * @throws \InvalidArgumentException When annotations can't be parsed
      */
-    public function load($file, $type = null)
+    public function load($file, $type = null): SecurityPolicyRules
     {
         $path = $this->locator->locate($file);
 
@@ -52,7 +52,7 @@ class AnnotationFileLoader extends FileLoader
     }
 
     /**
-     * {@inheritdoc}
+     * @param ?string $type
      */
     public function supports($resource, $type = null): bool
     {
@@ -64,13 +64,13 @@ class AnnotationFileLoader extends FileLoader
      *
      * @param string $file A PHP file path
      *
-     * @return string|false Full class name if found, false otherwise
+     * @return class-string|false Full class name if found, false otherwise
      */
     protected function findClass(string $file)
     {
         $class = false;
         $namespace = false;
-        $tokens = token_get_all(file_get_contents($file));
+        $tokens = token_get_all((string) file_get_contents($file));
 
         if (1 === \count($tokens) && \T_INLINE_HTML === $tokens[0][0]) {
             throw new \InvalidArgumentException(sprintf('The file "%s" does not contain PHP code. Did you forgot to add the "<?php" start tag at the beginning of the file?', $file));
@@ -89,7 +89,10 @@ class AnnotationFileLoader extends FileLoader
             }
 
             if (true === $class && \T_STRING === $token[0]) {
-                return $namespace . '\\' . $token[1];
+                /** @var class-string $r */
+                $r = $namespace . '\\' . $token[1];
+
+                return $r;
             }
 
             if (true === $namespace && isset($nsTokens[$token[0]])) {

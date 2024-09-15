@@ -13,5 +13,5 @@ class Sandbox
      *
      * List of allowed types is defined in `intaro.twig_sandbox.sandbox_annotation.value_types` parameter
      */
-    public $type = 'string';
+    public string $type = 'string';
 }
