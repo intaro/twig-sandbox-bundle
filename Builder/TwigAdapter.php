@@ -18,10 +18,8 @@ class TwigAdapter
 
     /**
      * @param mixed[] $args
-     *
-     * @return mixed
      */
-    public function __call(string $method, array $args)
+    public function __call(string $method, array $args): mixed
     {
         if (method_exists($this, $method)) {
             return $this->$method(...$args);

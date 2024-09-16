@@ -2,38 +2,11 @@
 
 ![CI](https://github.com/intaro/twig-sandbox-bundle/workflows/CI/badge.svg?branch=master)
 
-There is [Twig](https://twig.symfony.com)-extension [Sandbox](https://twig.symfony.com/doc/2.x/api.html#sandbox-extension) which can be used to evaluate untrusted code and where access to unsafe attributes and methods is prohibited. This bundle allows to configure security policy for sandbox.
+There is [Twig](https://twig.symfony.com)-extension [Sandbox](https://twig.symfony.com/doc/2.x/api.html#sandbox-extension) which can be used to evaluate untrusted code and where access to unsafe properties and methods is prohibited. This bundle allows to configure security policy for sandbox.
 
 ## Installation
 
-TwigSandboxBundle requires Symfony 4.4 or higher.
-
-Require the bundle in your `composer.json` file:
-
-```json
-{
-    "require": {
-        "intaro/twig-sandbox-bundle": "^2.0"
-    }
-}
-```
-
-Register the bundle in `AppKernel`:
-
-```php
-// app/AppKernel.php
-
-public function registerBundles()
-{
-    $bundles = [
-        //...
-
-        new Intaro\TwigSandboxBundle\IntaroTwigSandboxBundle(),
-    ];
-
-    //...
-}
-```
+TwigSandboxBundle requires Symfony 5.4 or higher.
 
 Install the bundle:
 
@@ -41,10 +14,19 @@ Install the bundle:
 $ composer require intaro/twig-sandbox-bundle
 ```
 
+Register the bundle in `config/bundles.php`:
+
+```php
+return [
+    // ...
+    Intaro\TwigSandboxBundle\IntaroTwigSandboxBundle::class => ['all' => true],
+];
+```
+
 ## Usage
 
-Define allowed properties and methods for your entities using annotation `@Sandbox`.
-Optionally you can add `type` option for annotation.
+Define allowed properties and methods for your entities using attribute `#[Sandbox]`.
+Optionally you can add `type` option for attribute (for example `#[Sandbox(type: 'int')]`).
 This option defines type of value that property stores or method returns.
 
 In your application you can use annotation reader to extract value of `type` option and use this value
@@ -59,97 +41,54 @@ namespace Acme\DemoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Intaro\TwigSandboxBundle\Annotation\Sandbox;
 
-/**
- * @ORM\Table()
- * @ORM\Entity
- */
+ #[ORM\Table]
+ #[ORM\Entity]
 class Product
 {
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: "AUTO")]
+    private ?int $id = null;
     
-    /**
-     * @var string $name
-     *
-     * @Sandbox(type="string")
-     * @ORM\Column(name="name", type="string", length=255)
-     */
-    private $name;
+    #[ORM\Column(name: 'name', type: 'string', length: 255)]
+    #[Sandbox(type: 'string')]
+    private string $name = '';
 
-    /**
-     * @var integer $quantity
-     *
-     * @ORM\Column(name="quantity", type="integer", nullable=true)
-     */
-    private $quantity;
+    #[ORM\Column(name: 'quantity', type: 'integer', nullable: true)]
+    private ?int $quantity = null;
 
 
-    /**
-     * Get id
-     *
-     * @Sandbox(type="int")
-     * @return integer 
-     */
-    public function getId()
+    #[Sandbox(type: 'int')]
+    public function getId(): ?int
     {
         return $this->id;
     }
     
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return Product
-     */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
     
-    /**
-     * Get name
-     *
-     * @Sandbox
-     * @return string
-     */
-    public function getName()
+    #[Sandbox]
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Set quantity
-     *
-     * @param boolean $quantity
-     * @return Product
-     */
-    public function setQuantity($quantity)
+    public function setQuantity(?int $quantity): self
     {
         $this->quantity = $quantity;
 
         return $this;
     }
     
-    /**
-     * Get quantity
-     *
-     * @return int
-     */
-    public function getQuantity()
+    public function getQuantity(): ?int
     {
         return $this->quantity;
     }
-
 }
-
 ```
 
 And use sandbox environment.
@@ -174,20 +113,16 @@ class Example {
     $product->setName('Product 1');
     $product->setQuantity(5);
     
-    //success render
+    // successful render
     $html1 = $twig->render(
         'Product {{ product.name }}',
-        [
-            'product' => $product,
-        ]
+        ['product' => $product]
     );
     
-    //render with exception
+    // render with the exception on access to the quantity method
     $html2 = $twig->render(
         'Product {{ product.name }} in the quantity {{ product.quantity }}',
-        [
-            'product' => $product,
-        ]
+        ['product' => $product]
     );
     
 }
@@ -198,7 +133,7 @@ class Example {
 You can validate entity fields which contain twig templates with TwigSandbox validator.
 
 ```php
-//in Entity/Page.php
+// in Entity/Page.php
 
 use Intaro\TwigSandboxBundle\Validator\Constraints\TwigSandbox;
 
@@ -220,7 +155,7 @@ class Page
 
 ### Methods and properties
 
-You can define allowed methods and properties of entities with annotation `Intaro\TwigSandboxBundle\Annotation\Sandbox`. Example above.
+You can define allowed methods and properties of entities with attribute `Intaro\TwigSandboxBundle\Attribute\Sandbox`. Example above.
 
 ### Tags 
 
@@ -353,7 +288,7 @@ $twig = $this->get(EnvironmentBuilder::class)->getSandboxEnvironment([
 ]);
 ```
 
-Also you might want to add extensions to your twig environment. Example how to add:
+Also, you might want to add extensions to your twig environment. Example how to add:
 ```php
 // Acme/DemoBundle/AcmeDemoBundle.php
 <?php

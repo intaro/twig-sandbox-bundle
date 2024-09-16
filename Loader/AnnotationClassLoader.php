@@ -2,7 +2,7 @@
 
 namespace Intaro\TwigSandboxBundle\Loader;
 
-use Doctrine\Common\Annotations\Reader;
+use Intaro\TwigSandboxBundle\Attribute\Sandbox;
 use Intaro\TwigSandboxBundle\SecurityPolicy\SecurityPolicyRules;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -10,79 +10,50 @@ use Symfony\Component\Config\Resource\FileResource;
 
 class AnnotationClassLoader implements LoaderInterface
 {
-    protected Reader $reader;
-    protected string $annotationClass = 'Intaro\\TwigSandboxBundle\\Annotation\\Sandbox';
-
-    public function __construct(Reader $reader)
-    {
-        $this->reader = $reader;
-    }
-
     /**
-     * Sets the annotation class to read  properties from.
-     *
-     * @param string $class A fully-qualified class name
+     * @param string $resource A class name
      */
-    public function setAnnotationClass(string $class): void
+    public function load(mixed $resource, ?string $type = null): SecurityPolicyRules
     {
-        $this->annotationClass = $class;
-    }
-
-    /**
-     * Loads from annotations from a class.
-     *
-     * @param string $class A class name
-     * @param string $type  The resource type
-     *
-     * @return SecurityPolicyRules A Rules instance
-     *
-     * @throws \InvalidArgumentException When annotations can't be parsed
-     */
-    public function load($class, $type = null): SecurityPolicyRules
-    {
-        if (!class_exists($class)) {
-            throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
+        if (!class_exists($resource)) {
+            throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $resource));
         }
 
-        $class = new \ReflectionClass($class);
+        $class = new \ReflectionClass($resource);
         if ($class->isAbstract()) {
-            throw new \InvalidArgumentException(sprintf('Annotations from class "%s" cannot be read as it is abstract.', $class));
+            throw new \InvalidArgumentException(sprintf('Attributes from the class "%s" cannot be read as it is abstract.', $resource));
         }
 
         $rules = new SecurityPolicyRules();
         $rules->addResource(new FileResource((string) $class->getFileName()));
 
         foreach ($class->getMethods() as $method) {
-            foreach ($this->reader->getMethodAnnotations($method) as $annot) {
-                if ($annot instanceof $this->annotationClass) {
-                    $methodName = $method->getName();
-                    $rules->addMethod($class->getName(), $methodName);
-                }
+            if (!count($method->getAttributes(Sandbox::class, \ReflectionAttribute::IS_INSTANCEOF))) {
+                continue;
             }
+
+            $rules->addMethod($class->getName(), $method->getName());
         }
 
         foreach ($class->getProperties() as $property) {
-            foreach ($this->reader->getPropertyAnnotations($property) as $annot) {
-                if ($annot instanceof $this->annotationClass) {
-                    $rules->addProperty($class->getName(), $property->getName());
-                }
+            if (!count($property->getAttributes(Sandbox::class, \ReflectionAttribute::IS_INSTANCEOF))) {
+                continue;
             }
+
+            $rules->addProperty($class->getName(), $property->getName());
         }
 
         return $rules;
     }
 
-    /**
-     * @param ?string $type
-     */
-    public function supports($resource, $type = null): bool
+    public function supports(mixed $resource, ?string $type = null): bool
     {
-        return is_string($resource) && preg_match('/^(?:\\\\?[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)+$/', $resource) && (!$type || 'annotation' === $type);
+        return
+            is_string($resource)
+            && preg_match('/^(?:\\\\?[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)+$/', $resource)
+            && (!$type || in_array($type, ['annotation', 'attribute'], true));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setResolver(LoaderResolverInterface $resolver): void
     {
     }

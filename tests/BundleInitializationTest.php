@@ -39,7 +39,7 @@ class BundleInitializationTest extends KernelTestCase
         $container = property_exists(__CLASS__, 'container') ? self::$container : self::getContainer();
 
         $this->assertTrue($container->has(EnvironmentBuilder::class));
-        $this->assertTrue($container->has(\Intaro\TwigSandboxBundle\Builder\EnvironmentBuilder::class));
+        $this->assertTrue($container->has(EnvironmentBuilder::class));
         $service = $container->get(EnvironmentBuilder::class);
         $this->assertInstanceOf(EnvironmentBuilder::class, $service);
     }

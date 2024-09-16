@@ -9,23 +9,16 @@ use Symfony\Component\Config\Resource\ResourceInterface;
  */
 class SecurityPolicyRules
 {
-    /** @var array<string, string[]> */
-    private array $methods;
-    /** @var array<string, string[]> */
-    private array $properties;
-    /** @var ResourceInterface[] */
-    private array $resources;
-
     /**
      * @param array<string, string[]> $methods
      * @param array<string, string[]> $properties
      * @param ResourceInterface[]     $resources
      */
-    public function __construct(array $methods = [], array $properties = [], array $resources = [])
-    {
-        $this->methods = $methods;
-        $this->properties = $properties;
-        $this->resources = $resources;
+    public function __construct(
+        private array $methods = [],
+        private array $properties = [],
+        private array $resources = [],
+    ) {
     }
 
     /**
@@ -76,11 +69,6 @@ class SecurityPolicyRules
         return array_unique($this->resources);
     }
 
-    /**
-     * Adds a resource for this rules.
-     *
-     * @param ResourceInterface $resource A resource instance
-     */
     public function addResource(ResourceInterface $resource): void
     {
         $this->resources[] = $resource;

@@ -30,7 +30,7 @@ class EnvironmentBuilder implements WarmableInterface
     /**
      * @param array<string, mixed> $options
      */
-    public function __construct(LoaderInterface $loader, DumperInterface $dumper, SecurityPolicy $policy = null, array $options = [])
+    public function __construct(LoaderInterface $loader, DumperInterface $dumper, ?SecurityPolicy $policy = null, array $options = [])
     {
         $this->loader = $loader;
         $this->policy = $policy;
@@ -65,7 +65,7 @@ class EnvironmentBuilder implements WarmableInterface
      *
      * @param array<string, mixed> $params
      */
-    public function getSandboxEnvironment(array $params = [], SecurityPolicy $securityPolicy = null): TwigAdapter
+    public function getSandboxEnvironment(array $params = [], ?SecurityPolicy $securityPolicy = null): TwigAdapter
     {
         $loader = new ArrayLoader();
         $twig = new Environment($loader, $params);
@@ -162,10 +162,7 @@ class EnvironmentBuilder implements WarmableInterface
         return $this->rules;
     }
 
-    /**
-     * @param string $cacheDir
-     */
-    public function warmUp(/*string */ $cacheDir/*, ?string $buildDir = null*/)/*: array*/
+    public function warmUp(string $cacheDir/* , ?string $buildDir = null */)/* : array */
     {
         $currentDir = $this->options['cache_dir'];
 

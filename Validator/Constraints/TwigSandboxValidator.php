@@ -9,11 +9,9 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class TwigSandboxValidator extends ConstraintValidator
 {
-    private EnvironmentBuilder $builder;
-
-    public function __construct(EnvironmentBuilder $builder)
-    {
-        $this->builder = $builder;
+    public function __construct(
+        private readonly EnvironmentBuilder $builder,
+    ) {
     }
 
     public function getTwig(): TwigAdapter
@@ -22,10 +20,9 @@ class TwigSandboxValidator extends ConstraintValidator
     }
 
     /**
-     * @param mixed       $value
      * @param TwigSandbox $constraint
      */
-    public function validate($value, Constraint $constraint): void
+    public function validate(mixed $value, Constraint $constraint): void
     {
         if (!$value) {
             return;
@@ -40,19 +37,15 @@ class TwigSandboxValidator extends ConstraintValidator
 
             $this->context->addViolation($constraint->message, [
                 '{{ syntax_error }}' => $message,
-             ]);
+            ]);
         } catch (\Twig\Error\SyntaxError $e) {
             $message = mb_strlen($e->getMessage()) > 150 ? mb_substr($e->getMessage(), 0, 150) . '…' : $e->getMessage();
 
             $this->context->addViolation($constraint->message, [
                 '{{ syntax_error }}' => $message,
-             ]);
-        } catch (\Error $e) {
-            goto ex_r;
-        } catch (\Exception $e) {
-            ex_r:
-
-             $this->context->addViolation($constraint->criticalErrorMessage);
+            ]);
+        } catch (\Error|\Exception) {
+            $this->context->addViolation($constraint->criticalErrorMessage);
         }
     }
 }
