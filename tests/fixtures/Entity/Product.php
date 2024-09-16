@@ -2,7 +2,7 @@
 
 namespace Intaro\TwigSandboxBundle\Tests\fixtures\Entity;
 
-use Intaro\TwigSandboxBundle\Annotation\Sandbox;
+use Intaro\TwigSandboxBundle\Attribute\Sandbox;
 
 class Product
 {
@@ -13,10 +13,9 @@ class Product
     /**
      * Get id
      *
-     * @Sandbox(type="int")
-     *
      * @return int
      */
+    #[Sandbox(type: 'int')]
     public function getId()
     {
         return $this->id;
@@ -39,10 +38,9 @@ class Product
     /**
      * Get name
      *
-     * @Sandbox
-     *
      * @return string
      */
+    #[Sandbox]
     public function getName()
     {
         return $this->name;

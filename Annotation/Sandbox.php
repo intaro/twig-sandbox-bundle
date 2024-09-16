@@ -3,6 +3,8 @@
 namespace Intaro\TwigSandboxBundle\Annotation;
 
 /**
+ * @deprecated left only for automatic conversion of annotations to attributes
+ *
  * @Annotation
  * @Target({"METHOD", "PROPERTY"})
  */

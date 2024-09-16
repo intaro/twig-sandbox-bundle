@@ -11,13 +11,7 @@ class AnnotationFileLoader extends FileLoader
 {
     protected AnnotationClassLoader $loader;
 
-    /**
-     * Constructor.
-     *
-     * @param FileLocator           $locator A FileLocator instance
-     * @param AnnotationClassLoader $loader  An AnnotationClassLoader instance
-     */
-    public function __construct(FileLocator $locator, AnnotationClassLoader $loader, string $env = null)
+    public function __construct(FileLocator $locator, AnnotationClassLoader $loader, ?string $env = null)
     {
         if (!function_exists('token_get_all')) {
             throw new \RuntimeException('The Tokenizer extension is required for the routing annotation loaders.');
@@ -29,18 +23,11 @@ class AnnotationFileLoader extends FileLoader
     }
 
     /**
-     * Loads from annotations from a file.
-     *
-     * @param string  $file A PHP file path
-     * @param ?string $type The resource type
-     *
-     * @return SecurityPolicyRules A Rules instance
-     *
-     * @throws \InvalidArgumentException When annotations can't be parsed
+     * @param string $resource A PHP file path
      */
-    public function load($file, $type = null): SecurityPolicyRules
+    public function load(mixed $resource, ?string $type = null): SecurityPolicyRules
     {
-        $path = $this->locator->locate($file);
+        $path = $this->locator->locate($resource);
 
         $rules = new SecurityPolicyRules();
         if ($class = $this->findClass($path)) {
@@ -51,22 +38,20 @@ class AnnotationFileLoader extends FileLoader
         return $rules;
     }
 
-    /**
-     * @param ?string $type
-     */
-    public function supports($resource, $type = null): bool
+    public function supports(mixed $resource, ?string $type = null): bool
     {
-        return is_string($resource) && 'php' === pathinfo($resource, PATHINFO_EXTENSION) && (!$type || 'annotation' === $type);
+        return
+            is_string($resource)
+            && 'php' === pathinfo($resource, PATHINFO_EXTENSION)
+            && (!$type || in_array($type, ['annotation', 'attribute'], true));
     }
 
     /**
      * Returns the full class name for the first class in the file.
      *
-     * @param string $file A PHP file path
-     *
-     * @return class-string|false Full class name if found, false otherwise
+     * @return class-string|false
      */
-    protected function findClass(string $file)
+    protected function findClass(string $file): string|false
     {
         $class = false;
         $namespace = false;
@@ -117,7 +102,9 @@ class AnnotationFileLoader extends FileLoader
                     if (\T_DOUBLE_COLON === $tokens[$j][0] || \T_NEW === $tokens[$j][0]) {
                         $skipClassToken = true;
                         break;
-                    } elseif (!\in_array($tokens[$j][0], [\T_WHITESPACE, \T_DOC_COMMENT, \T_COMMENT])) {
+                    }
+
+                    if (!\in_array($tokens[$j][0], [\T_WHITESPACE, \T_DOC_COMMENT, \T_COMMENT])) {
                         break;
                     }
                 }
