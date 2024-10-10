@@ -18,7 +18,6 @@ jobs:
           - '8.2'
           - '8.3'
         symfony-version:
-          - '5.4.*'
           - '6.3.*'
         coverage: [ 'none' ]
     steps:
