@@ -162,7 +162,7 @@ class EnvironmentBuilder implements WarmableInterface
         return $this->rules;
     }
 
-    public function warmUp(string $cacheDir/* , ?string $buildDir = null */)/* : array */
+    public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
         $currentDir = $this->options['cache_dir'];
 

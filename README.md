@@ -6,7 +6,7 @@ There is [Twig](https://twig.symfony.com)-extension [Sandbox](https://twig.symfo
 
 ## Installation
 
-TwigSandboxBundle requires Symfony 5.4 or higher.
+TwigSandboxBundle requires Symfony 6.0 or higher.
 
 Install the bundle:
 

@@ -14,7 +14,7 @@ class TwigSandboxCacheWarmer implements CacheWarmerInterface
         $this->environmentBuilder = $builder;
     }
 
-    public function warmUp(string $cacheDir/* , ?string $buildDir = null */)/* : array */
+    public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
         return $this->environmentBuilder->warmUp($cacheDir);
     }
