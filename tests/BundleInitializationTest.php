@@ -10,7 +10,7 @@ use Nyholm\BundleTest\TestKernel;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Sandbox\SecurityNotAllowedFilterError;
-use Twig\Sandbox\SecurityNotAllowedMethodError;
+use Twig\Sandbox\SecurityNotAllowedPropertyError;
 
 class BundleInitializationTest extends KernelTestCase
 {
@@ -76,8 +76,8 @@ class BundleInitializationTest extends KernelTestCase
 
     public function testRenderError(): void
     {
-        $this->expectException(SecurityNotAllowedMethodError::class);
-        $this->expectExceptionMessageMatches('/Calling "getquantity" method on a ".*Product" object is not allowed in/');
+        $this->expectException(SecurityNotAllowedPropertyError::class);
+        $this->expectExceptionMessageMatches('/Calling "quantity" property on a ".*Product" object is not allowed in/');
 
         self::bootKernel();
         $container = property_exists(__CLASS__, 'container') ? self::$container : self::getContainer();

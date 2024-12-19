@@ -62,6 +62,8 @@ parameters:
         - 'object'
         - 'string'
 
+    intaro.twig_sandbox.additional_paths: []
+
 services:
     _defaults:
         public: false
@@ -106,10 +108,10 @@ services:
                 cache_filename: "%intaro.twig_sandbox.cache.file_name%"
                 bundles: "%kernel.bundles%"
                 debug: "%kernel.debug%"
-
+                additional_paths: "%intaro.twig_sandbox.additional_paths%"
 
     Intaro\TwigSandboxBundle\CacheWarmer\TwigSandboxCacheWarmer:
-       tags:
+        tags:
             - { name: kernel.cache_warmer }
 
     Intaro\TwigSandboxBundle\Validator\Constraints\TwigSandboxValidator:
