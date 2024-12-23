@@ -63,6 +63,7 @@ class SimpleTest extends TestCase
                 'cache_filename' => 'IntaroTwigSandboxPolicy',
                 'bundles' => ['Intaro\TwigSandboxBundle\Tests\fixtures\FixtureBundle'], // %kernel.bundles%
                 'debug' => false, // %kernel.debug%
+                'additional_paths' => [],
             ]
         );
 

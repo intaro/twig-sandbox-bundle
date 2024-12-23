@@ -335,6 +335,20 @@ class TwigSandboxPass implements CompilerPassInterface
 }
 ```
 
+### Other parameters
+
+You can specify additional directories for each bundle to scan (using parameter `intaro.twig_sandbox.additional_paths`).
+
+Example:
+```yml
+# app/config/config.yml
+
+parameters:
+    intaro.twig_sandbox.additional_paths:
+        AcmeDemoBundle:
+            - 'Model'
+```
+
 ## Development ##
 
 ### Run tests ###

@@ -3,4 +3,5 @@ parameters:
     intaro.twig_sandbox.policy_filters:
         - 'escape'
     intaro.twig_sandbox.policy_functions: []
+    intaro.twig_sandbox.additional_paths: []
 

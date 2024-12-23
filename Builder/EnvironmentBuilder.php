@@ -95,6 +95,7 @@ class EnvironmentBuilder implements WarmableInterface
             'cache_filename' => 'IntaroTwigSandboxPolicy',
             'bundles' => [],
             'debug' => false,
+            'additional_paths' => [],
         ];
 
         // check option names and live merge, if errors are encountered Exception will be thrown
@@ -147,10 +148,17 @@ class EnvironmentBuilder implements WarmableInterface
 
             foreach ($this->options['bundles'] as $bundle) {
                 $refl = new \ReflectionClass($bundle);
-
                 $dir = dirname((string) $refl->getFileName()) . '/Entity';
                 if (file_exists($dir) && is_dir($dir)) {
                     $rules->merge($this->loader->load($dir));
+                }
+
+                $additionalPaths = $this->options['additional_paths'][$refl->getShortName()] ?? [];
+                foreach ($additionalPaths as $path) {
+                    $additionalDir = dirname((string) $refl->getFileName()) . '/' . $path;
+                    if (file_exists($additionalDir) && is_dir($additionalDir)) {
+                        $rules->merge($this->loader->load($additionalDir));
+                    }
                 }
             }
 
