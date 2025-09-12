@@ -6,9 +6,11 @@ use Intaro\TwigSandboxBundle\Builder\EnvironmentBuilder;
 use Intaro\TwigSandboxBundle\IntaroTwigSandboxBundle;
 use Intaro\TwigSandboxBundle\Tests\fixtures\Entity\Product;
 use Intaro\TwigSandboxBundle\Tests\fixtures\FixtureBundle;
+use Intaro\TwigSandboxBundle\Validator\Constraints\TwigSandbox;
 use Nyholm\BundleTest\TestKernel;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedMethodError;
 
@@ -111,6 +113,64 @@ class BundleInitializationTest extends KernelTestCase
         ]);
 
         $this->assertEquals('Product product 1', $html);
+    }
+
+    public function testValidationIsValid(): void
+    {
+        self::bootKernel();
+        $container = property_exists(__CLASS__, 'container') ? self::$container : self::getContainer();
+
+        /** @var ValidatorInterface $validator */
+        $validator = $container->get(ValidatorInterface::class);
+        $this->assertCount(0, $validator->validate('', new TwigSandbox()));
+        $this->assertCount(0, $validator->validate('ddd', new TwigSandbox()));
+        $this->assertCount(0, $validator->validate('{{ v }}', new TwigSandbox()));
+        $this->assertCount(0, $validator->validate('{{ v.name }}', new TwigSandbox([
+            'strict' => true,
+            'vars' => ['v' => Product::class],
+        ])));
+    }
+
+    public function testValidationIsNotValid(): void
+    {
+        self::bootKernel();
+        $container = property_exists(__CLASS__, 'container') ? self::$container : self::getContainer();
+
+        /** @var ValidatorInterface $validator */
+        $validator = $container->get(ValidatorInterface::class);
+
+        $result = $validator->validate(
+            '{{ v }}',
+            new TwigSandbox(['strict' => true])
+        );
+        $this->assertCount(1, $result);
+        $this->assertStringContainsString(
+            'Variable "v" does not exist',
+            $result->get(0)->getParameters()['{{ syntax_error }}']
+        );
+
+        $result = $validator->validate(
+            '{{ p.name }}{{ v }}',
+            new TwigSandbox([
+                'strict' => true,
+                'vars' => ['p' => Product::class],
+            ])
+        );
+        $this->assertCount(1, $result);
+        $this->assertStringContainsString(
+            'Variable "v" does not exist',
+            $result->get(0)->getParameters()['{{ syntax_error }}']
+        );
+
+        $result = $validator->validate(
+            '{{ ddd',
+            new TwigSandbox()
+        );
+        $this->assertCount(1, $result);
+        $this->assertStringContainsString(
+            'Unexpected token "end of template"',
+            $result->get(0)->getParameters()['{{ syntax_error }}']
+        );
     }
 
     private function getObject(): Product

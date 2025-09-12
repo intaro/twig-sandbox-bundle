@@ -1,6 +1,0 @@
-parameters:
-	ignoreErrors:
-		-
-			message: "#Dead catch - .+? is never thrown in the try block#"
-			count: 1
-			path: Validator/Constraints/TwigSandboxValidator.php
